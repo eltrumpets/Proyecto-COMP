@@ -1,0 +1,165 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{lmodern}
+
+\setlength{\parskip}{0.8em}
+\setlength{\parindent}{0pt}
+\setstretch{1.2}
+
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=black,
+    linktoc=page
+}
+
+\begin{document}
+
+% Definición de estilo para Flex
+\lstdefinelanguage{Flex}{
+  morekeywords={%%
+    int,char,float,double,return,if,else,while,for,void,
+    %%
+  },
+  morekeywords=[2]{%%
+    BEGIN,INITIAL,ECHO,yylval,yylex,yytext,%%
+  },
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]"
+}
+
+% Definición de estilo para Bison
+\lstdefinelanguage{Bison}{
+  morekeywords={%%
+    %token,%type,%start,%left,%right,%nonassoc,
+    %%,%%
+  },
+  morekeywords=[2]{%%
+    int,char,float,double,return,if,else,while,for,%%
+  },
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]"
+}
+
+% Estilo general
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  keywordstyle=[2]\color{teal},
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{orange},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  frame=single,
+  breaklines=true,
+  tabsize=2,
+  showstringspaces=false,
+  captionpos=b
+}
+
+\begin{titlepage}
+	\centering
+	{\bfseries\LARGE Universidad de Murcia \par}
+	\vspace{1cm}
+	{\scshape\Large Facultad de Ingenier\'ia Inform\'atica \par}
+	\vspace{3cm}
+	{\scshape\Huge Pr\'actica Final \par}
+	\vspace{1cm}
+	{\itshape\Large Compiladores \par}
+	\vfill
+	{\Large \textbf{Autor:}} {\Large Hugo Garc\'ia Carrillo \par}
+	\vspace{0.5cm}
+	{\Large \textbf{DNI:}} {\Large 21066901M \par \textbf{EMAIL:}} {\Large hugo.g.c@um.es \par}
+	\vspace{0.5cm}
+	{\Large \textbf{Profesor:} Eduardo Martínez Gracia \par}
+	\vspace{0.5cm}
+	{\Large \textbf{Grupo:} 1.1 \par}
+
+
+	\vfill
+	{\Large 29 de Noviembre, 2025 \par}
+\end{titlepage}
+
+\large \tableofcontents
+\newpage
+\section{Código del proyecto}
+\subsection{Análisis sintáctico}
+\subsubsection{main.c}
+\begin{lstlisting}[caption={main.c}]
+    #include <stdio.h>
+#include <stdlib.h>
+extern char *yytext;
+extern int yylex();
+extern FILE *yyin;
+
+int main(int argc, char * argv[]){
+    int token;
+
+    if (argc != 2){
+        printf("Uso: %s fichero\n", argv[0]);
+        exit(1);
+    }
+    yyin = fopen(argv[1],"r");
+    if(yyin == NULL){
+        printf("No se puede abrir %s\n", argv[1]);
+        exit(2);
+    }
+
+    while((token = yylex()) != 0){
+        printf("Token: <%d,%s>\n", token, yytext);
+        /* yytext nos pone cual es el lexema de cada token */
+    }
+
+}
+\end{lstlisting}
+\subsubsection{makefile}
+\begin{lstlisting}[caption={makefile}]
+lexico : lex.yy.c main.c
+	gcc lex.yy.c main.c -lfl -o lexico
+
+lex.yy.c : microC.l microC.h
+	flex microC.l
+
+clean : 
+	rm -f lex.yy.c lexico
+
+run : lexico entrada.txt
+	./lexico entrada.txt
+
+\end{lstlisting}
+\subsubsection{microC.h}
+\begin{lstlisting}[caption={microC.h}]
+#ifndef MICRO_C_H
+#define MICRO_C_H
+
+#include <stdio.h>
+#include <stdlib.h>
+
+extern int yylex();
+extern FILE *yyin;
+extern char *yytext;
+
+#endif
+\end{lstlisting}
+\subsubsection{microC.l}
+
+
+\end{document}
