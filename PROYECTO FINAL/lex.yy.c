@@ -916,67 +916,68 @@ YY_RULE_SETUP
                     contador_error++;
                     printf("Identificador %s que excede el máximo de caracteres en la linea %d\n", yytext, yylineno);
                   }
+                  yylval.str = strdup(yytext);
                   return IDE; 
                 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 58 "microC.l"
+#line 59 "microC.l"
 { return IGU; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 59 "microC.l"
+#line 60 "microC.l"
 { return SUM; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 60 "microC.l"
+#line 61 "microC.l"
 { return RES; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 61 "microC.l"
+#line 62 "microC.l"
 { return MUL; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 62 "microC.l"
+#line 63 "microC.l"
 { return DIV; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 63 "microC.l"
+#line 64 "microC.l"
 { return COI; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 64 "microC.l"
+#line 65 "microC.l"
 { return COD; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 65 "microC.l"
+#line 66 "microC.l"
 { return COM; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 66 "microC.l"
+#line 67 "microC.l"
 { return PYC; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 67 "microC.l"
+#line 68 "microC.l"
 { return PAI; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 68 "microC.l"
+#line 69 "microC.l"
 { return PAD; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 70 "microC.l"
+#line 71 "microC.l"
 { 
                   long long entero = strtoll(yytext, NULL, 10);
                   if(entero > MAX_ENTERO){
@@ -984,31 +985,36 @@ YY_RULE_SETUP
                             yylineno, yytext);
                     contador_error++;
                   }
+                  yylval.num = entero;
                   return NUM; 
                               }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 79 "microC.l"
-{ return CAD; }
+#line 81 "microC.l"
+{ int len = strlen(yytext);
+    yylval.str = malloc(len - 1);
+    strncpy(yylval.str, yytext + 1, len - 2);
+    yylval.str[len - 2] = '\0';
+    return CAD; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 80 "microC.l"
+#line 86 "microC.l"
 { printf("Cadena de caracteres no cerrada en línea %d: %s\n", yylineno, yytext); }
 	YY_BREAK
 /* Expresion regular de errores */
 case 30:
 YY_RULE_SETUP
-#line 83 "microC.l"
+#line 89 "microC.l"
 { printf("Error en linea %d: %s\n", yylineno, yytext);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 85 "microC.l"
+#line 91 "microC.l"
 ECHO;
 	YY_BREAK
-#line 1012 "lex.yy.c"
+#line 1018 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2025,7 +2031,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 85 "microC.l"
+#line 91 "microC.l"
 
 
 

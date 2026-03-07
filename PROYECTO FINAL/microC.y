@@ -61,7 +61,8 @@
 
 %%
 
-program : "void" IDE "(" ")" "{" body "}"
+program : "void" IDE "(" ")"  { printf("program->void %s(){body}\n", $2); }"{"body"}"
+                              { printf("Programa %s procesado\n", $2); }
         ;
 
 body : body declaration
@@ -69,28 +70,28 @@ body : body declaration
      | %empty
      ; 
 
-declaration : "var" tipo id_list ";"
-            | "const" tipo id_list ";"
+declaration : "var" { printf("var "); } tipo id_list ";" { printf("\n"); }
+            | "const" { printf("const "); } tipo id_list ";" { printf("\n"); }
             ;
 
-tipo : "int"
+tipo : "int"    { printf("int "); }
      ;
 
-id_list : id_decl
-        | id_list "," id_decl
+id_list : id_decl 
+        | id_list "," id_decl 
         ;
 
-id_decl : IDE
-        | IDE "=" expression
+id_decl : IDE { printf("%s ", $1); }
+        | IDE "=" expression { printf("%s=%d ", $1, $3); }
         ;
 
-statement : IDE "=" expression ;
+statement : IDE "=" expression ";"
           | "{" statement_list "}"
-          | "if" "(" expression ")" statement "else" statement
-          | "if" "(" expression ")" statement
-          | "while" "(" expression ")" statement
-          | "print" "(" print_list ")" ";"
-          | "read" "(" read_list ")" ";"
+          | "if" "(" expression ")" statement "else" statement { printf("if (%d) statement else statement\n", $3); }
+          | "if" "(" expression ")" statement %prec NOELSE     { printf("if (%d) statement\n", $3); }
+          | "while" "(" expression ")" statement    { printf("while (%d) statement\n", $3); }
+          | "print" "(" print_list ")" ";" { printf("\n"); }
+          | "read" "(" read_list ")" ";"        { printf("read ();\n"); }
           | error
           ;
 
@@ -98,25 +99,22 @@ statement_list : statement_list statement
                | %empty
                ;
 
-print_list : print_item
+print_list : print_item         
            | print_list "," print_item
            ;
 
-print_item : expression
-           | CAD
+print_item : expression { printf("%d ", $1); }
+           | CAD        { printf("%s ", $1); }
            ;
 
 read_list : IDE
           | read_list "," IDE
           ;
 
-
-
-
-expression : expression "+" expression { printf("E->E+E\n"); $$ = $1+$3; }
-     | expression "-" expression { printf("E->E-E\n"); $$ = $1-$3; }
-     | expression "*" expression { printf("E->E*E\n"); $$ = $1 * $3; } 
-     | expression "/" expression { printf("E->E/E\n"); 
+expression : expression "+" expression { printf("Expresion->%d+%d\n", $1, $3); $$ = $1+$3; }
+     | expression "-" expression { printf("Expresion->%d-%d\n", $1, $3); $$ = $1-$3; }
+     | expression "*" expression { printf("Expresion->%d*%d\n", $1, $3); $$ = $1 * $3; } 
+     | expression "/" expression { printf("Expresion->%d/%d\n", $1, $3); 
                        if ($3 == 0){
                          printf("División por 0 en línea %d\n",
                                 yylineno);
@@ -124,10 +122,10 @@ expression : expression "+" expression { printf("E->E+E\n"); $$ = $1+$3; }
                        }
                        $$ = $1 / $3;
                      }
-     | NUM           { printf("E->num (%d)\n", $1); $$ = $1; }
-     | IDE { $$ = 0; }       
-     | "(" expression ")"  { printf("E->(E)\n"); $$ = $2; }
-     | "-" expression %prec SIGNO   { printf("E->-E\n"); $$ = -$2; }
+     | NUM { $$ = $1; }
+     | IDE { printf("Variable %s\n", $1); $$ = 0; }       
+     | "(" expression ")"  { printf("(%d)\n", $2); $$ = $2; }
+     | "-" expression %prec SIGNO   { printf("-%d\n", $2); $$ = -$2; }
      | "(" error ")"  { }
      ;
 

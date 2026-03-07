@@ -3,8 +3,10 @@
 extern char *yytext;
 extern int yylex();
 extern FILE *yyin;
+extern int yyparse();
 
 int errores = 0;
+
 int main(int argc, char * argv[]){
     int token;
 
@@ -18,9 +20,6 @@ int main(int argc, char * argv[]){
         exit(2);
     }
 
-    while((token = yylex()) != 0){
-        printf("Token: <%d,%s>\n", token, yytext);
-        /* yytext nos pone cual es el lexema de cada token */
-    }
+    yyparse();
 
 }

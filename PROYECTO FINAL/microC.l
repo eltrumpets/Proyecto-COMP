@@ -52,6 +52,7 @@ panico  [^a-zA-Z_0-9+\-*/ /; \t\n\r\"(){}]+
                     contador_error++;
                     printf("Identificador %s que excede el máximo de caracteres en la linea %d\n", yytext, yylineno);
                   }
+                  yylval.str = strdup(yytext);
                   return IDE; 
                 }
 "="             { return IGU; }
@@ -73,9 +74,14 @@ panico  [^a-zA-Z_0-9+\-*/ /; \t\n\r\"(){}]+
                             yylineno, yytext);
                     contador_error++;
                   }
+                  yylval.num = entero;
                   return NUM; 
                               }
-\"([^"\n\\]|\\["ntr\\])*\"   { return CAD; }
+\"([^"\n\\]|\\["ntr\\])*\"   { int len = strlen(yytext);
+    yylval.str = malloc(len - 1);
+    strncpy(yylval.str, yytext + 1, len - 2);
+    yylval.str[len - 2] = '\0';
+    return CAD; }
 \"([^"\n\\]|\\[\"ntr\\])*     { printf("Cadena de caracteres no cerrada en línea %d: %s\n", yylineno, yytext); }
 
  /* Expresion regular de errores */
