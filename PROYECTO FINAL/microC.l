@@ -77,10 +77,7 @@ panico  [^a-zA-Z_0-9+\-*/ /; \t\n\r\"(){}]+
                   yylval.num = entero;
                   return NUM; 
                               }
-\"([^"\n\\]|\\["ntr\\])*\"   { int len = strlen(yytext);
-    yylval.str = malloc(len - 1);
-    strncpy(yylval.str, yytext + 1, len - 2);
-    yylval.str[len - 2] = '\0';
+\"([^"\n\\]|\\["ntr\\])*\"   { yylval.str = strdup(yytext);
     return CAD; }
 \"([^"\n\\]|\\[\"ntr\\])*     { printf("Cadena de caracteres no cerrada en línea %d: %s\n", yylineno, yytext); }
 

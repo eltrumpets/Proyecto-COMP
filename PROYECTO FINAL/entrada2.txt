@@ -1,9 +1,8 @@
 void main() { 
-    const int a = 0, b = 0;
+    const int a = 1, b = 0;
 
     print("Inicio del programa\n");
-
-    var int c = 5+2-2;
+    var int c = 5+2-d;
 
     if (a) 
         print("a","\n");

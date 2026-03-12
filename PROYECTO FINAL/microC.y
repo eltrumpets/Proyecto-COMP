@@ -1,10 +1,21 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
+    #include "listaSimbolos.h"
+
     extern int yylex();
     extern int yylineno;
     extern int errores;
+    int numCadena = 1;
     void yyerror(const char *msg);
+    // Lista de simbolos
+    Lista l;
+    void declarar_id(char *id, Tipo t);
+    void imprimirLS(Lista l);
+    void declarar_cadena(char *cadena, Tipo t);
+    // Variable para determinar si el id es VAR o CONST
+    Tipo t;
 %}
 
 %union{
@@ -38,6 +49,7 @@
 
 // Tipo de dato de los no terinales de la gramática
 %type <num> expression 
+%type <str> tipo
 
 
 /* Asociatividad y precedencia de los operadores 
@@ -59,10 +71,18 @@
 
 %define parse.error verbose
 
+// Evitar el warning de if / if-else
+//%expect 1
+
 %%
 
-program : "void" IDE "(" ")"  { printf("program->void %s(){body}\n", $2); }"{"body"}"
-                              { printf("Programa %s procesado\n", $2); }
+program : { l = creaLS(); }
+          VOI IDE "(" ")" "{"body"}" { }
+          { if (errores == 0){
+               imprimirLS(l);
+            }
+            liberaLS(l); 
+          }
         ;
 
 body : body declaration
@@ -70,28 +90,32 @@ body : body declaration
      | %empty
      ; 
 
-declaration : "var" { printf("var "); } tipo id_list ";" { printf("\n"); }
-            | "const" { printf("const "); } tipo id_list ";" { printf("\n"); }
+declaration : VAR { t = VARIABLE; }tipo id_list ";" 
+            | CON { t = CONSTANTE; } tipo id_list ";" 
             ;
 
-tipo : "int"    { printf("int "); }
+tipo : INT    { $$ = "int"; }
      ;
 
 id_list : id_decl 
         | id_list "," id_decl 
         ;
 
-id_decl : IDE { printf("%s ", $1); }
-        | IDE "=" expression { printf("%s=%d ", $1, $3); }
+id_decl : IDE {
+            declarar_id($1,t);
+        }
+        | IDE "=" expression {
+            declarar_id($1,t);
+        }
         ;
 
 statement : IDE "=" expression ";"
           | "{" statement_list "}"
-          | "if" "(" expression ")" statement "else" statement { printf("if (%d) statement else statement\n", $3); }
-          | "if" "(" expression ")" statement %prec NOELSE     { printf("if (%d) statement\n", $3); }
-          | "while" "(" expression ")" statement    { printf("while (%d) statement\n", $3); }
-          | "print" "(" print_list ")" ";" { printf("\n"); }
-          | "read" "(" read_list ")" ";"        { printf("read ();\n"); }
+          | "if" "(" expression ")" statement "else" statement 
+          | "if" "(" expression ")" statement %prec NOELSE     
+          | "while" "(" expression ")" statement   
+          | "print" "(" print_list ")" ";"    
+          | "read" "(" read_list ")" ";"        
           | error
           ;
 
@@ -103,19 +127,20 @@ print_list : print_item
            | print_list "," print_item
            ;
 
-print_item : expression { printf("%d ", $1); }
-           | CAD        { printf("%s ", $1); }
+print_item : expression 
+           | CAD {
+               declarar_cadena($1,CADENA);
+           }
            ;
 
 read_list : IDE
           | read_list "," IDE
           ;
 
-expression : expression "+" expression { printf("Expresion->%d+%d\n", $1, $3); $$ = $1+$3; }
-     | expression "-" expression { printf("Expresion->%d-%d\n", $1, $3); $$ = $1-$3; }
-     | expression "*" expression { printf("Expresion->%d*%d\n", $1, $3); $$ = $1 * $3; } 
-     | expression "/" expression { printf("Expresion->%d/%d\n", $1, $3); 
-                       if ($3 == 0){
+expression : expression "+" expression { $$ = $1+$3; }
+     | expression "-" expression { $$ = $1-$3; }
+     | expression "*" expression { $$ = $1 * $3; } 
+     | expression "/" expression { if ($3 == 0){
                          printf("División por 0 en línea %d\n",
                                 yylineno);
                          exit(1);
@@ -123,9 +148,9 @@ expression : expression "+" expression { printf("Expresion->%d+%d\n", $1, $3); $
                        $$ = $1 / $3;
                      }
      | NUM { $$ = $1; }
-     | IDE { printf("Variable %s\n", $1); $$ = 0; }       
-     | "(" expression ")"  { printf("(%d)\n", $2); $$ = $2; }
-     | "-" expression %prec SIGNO   { printf("-%d\n", $2); $$ = -$2; }
+     | IDE { $$ = 0; }       
+     | "(" expression ")"  { $$ = $2; }
+     | "-" expression %prec SIGNO   { $$ = -$2; }
      | "(" error ")"  { }
      ;
 
@@ -134,4 +159,56 @@ expression : expression "+" expression { printf("Expresion->%d+%d\n", $1, $3); $
 void yyerror(const char *msg){
     printf("Error sintáctico en línea %d: %s\n", yylineno, msg);
     errores++;
+}
+
+void declarar_id(char *id, Tipo t){
+     PosicionLista p = buscaLS(l, id);
+     if(p != finalLS(l)){
+          printf("Error en linea %d: variable %s redeclarada\n", yylineno, id);
+          errores++;
+
+     }else{
+          Simbolo s;
+          s.nombre = id;
+          s.valor = 0;
+          s.tipo = t;
+          insertaLS(l, finalLS(l),s);
+     }
+}
+
+void declarar_cadena(char *cadena, Tipo t){
+     PosicionLista p = buscaLS(l, cadena);
+     Simbolo s;
+     s.nombre = cadena;
+     s.valor = numCadena++;
+     s.tipo = t;
+     insertaLS(l, finalLS(l),s);
+     
+}
+
+
+
+void imprimirLS(Lista l){
+     printf("##################\n");
+     printf("# Seccion de datos\n");
+     printf(".data\n");
+     PosicionLista p = inicioLS(l);
+     p = inicioLS(l);
+    while (p != finalLS(l)) {
+        Simbolo aux = recuperaLS(l, p);
+        if(aux.tipo == VARIABLE || aux.tipo == CONSTANTE){
+            printf("_%s: .word %d\n", aux.nombre, aux.valor);
+        }
+        p = siguienteLS(l, p);
+    }
+
+    // cadenas
+    p = inicioLS(l);
+    while (p != finalLS(l)) {
+        Simbolo aux = recuperaLS(l, p);
+        if(aux.tipo == CADENA){
+            printf("$str%d: .asciiz %s\n", aux.valor, aux.nombre);
+        }
+        p = siguienteLS(l, p);
+    }
 }

@@ -992,29 +992,26 @@ YY_RULE_SETUP
 case 28:
 YY_RULE_SETUP
 #line 81 "microC.l"
-{ int len = strlen(yytext);
-    yylval.str = malloc(len - 1);
-    strncpy(yylval.str, yytext + 1, len - 2);
-    yylval.str[len - 2] = '\0';
+{ yylval.str = strdup(yytext);
     return CAD; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 86 "microC.l"
+#line 83 "microC.l"
 { printf("Cadena de caracteres no cerrada en línea %d: %s\n", yylineno, yytext); }
 	YY_BREAK
 /* Expresion regular de errores */
 case 30:
 YY_RULE_SETUP
-#line 89 "microC.l"
+#line 86 "microC.l"
 { printf("Error en linea %d: %s\n", yylineno, yytext);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 91 "microC.l"
+#line 88 "microC.l"
 ECHO;
 	YY_BREAK
-#line 1018 "lex.yy.c"
+#line 1015 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2031,7 +2028,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 91 "microC.l"
+#line 88 "microC.l"
 
 
 
