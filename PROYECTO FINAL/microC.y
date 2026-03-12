@@ -77,8 +77,9 @@
 %%
 
 program : { l = creaLS(); }
-          VOI IDE "(" ")" "{"body"}" { }
-          { if (errores == 0){
+          VOI IDE "(" ")" "{"body"}" 
+          {
+           if (errores == 0){
                imprimirLS(l);
             }
             liberaLS(l); 
@@ -102,14 +103,26 @@ id_list : id_decl
         ;
 
 id_decl : IDE {
-            declarar_id($1,t);
+            declarar_id($1, t);
         }
         | IDE "=" expression {
             declarar_id($1,t);
         }
         ;
 
-statement : IDE "=" expression ";"
+statement : IDE "=" expression ";" 
+            { PosicionLista p = buscaLS(l, $1);
+              if(p == finalLS(l)){
+                printf("Error en línea %d: variable '%s' no declarada\n", yylineno, $1);
+                errores++;
+            } else {
+                Simbolo s = recuperaLS(l, p);
+                if(s.tipo == CONSTANTE){
+                    printf("Error en línea %d: no se le puede asignar a la constante '%s'\n", yylineno, $1);
+                    errores++;
+                }
+            }
+            }
           | "{" statement_list "}"
           | "if" "(" expression ")" statement "else" statement 
           | "if" "(" expression ")" statement %prec NOELSE     
@@ -134,7 +147,33 @@ print_item : expression
            ;
 
 read_list : IDE
+            {  
+              PosicionLista p = buscaLS(l, $1);
+              if(p == finalLS(l)){
+                printf("Error en línea %d: variable '%s' no declarada\n", yylineno, $1);
+                errores++;
+            } else {
+                Simbolo s = recuperaLS(l, p);
+                if(s.tipo == CONSTANTE){
+                    printf("Error en línea %d: no se le puede asignar a la constante '%s'\n", yylineno, $1);
+                    errores++;
+                }
+            }
+            }
           | read_list "," IDE
+          {
+              PosicionLista p = buscaLS(l, $3);
+              if(p == finalLS(l)){
+                printf("Error en línea %d: variable '%s' no declarada\n", yylineno, $3);
+                errores++;
+            } else {
+                Simbolo s = recuperaLS(l, p);
+                if(s.tipo == CONSTANTE){
+                    printf("Error en línea %d: no se le puede asignar a la constante '%s'\n", yylineno, $3);
+                    errores++;
+                }
+            }
+          }
           ;
 
 expression : expression "+" expression { $$ = $1+$3; }
@@ -148,7 +187,15 @@ expression : expression "+" expression { $$ = $1+$3; }
                        $$ = $1 / $3;
                      }
      | NUM { $$ = $1; }
-     | IDE { $$ = 0; }       
+     | IDE { PosicionLista p = buscaLS(l, $1);
+         if(p == finalLS(l)){
+             printf("Error en línea %d: variable '%s' no declarada\n", yylineno, $1);
+             errores++;
+             $$ = 0;
+         } else {
+             $$ = 0;
+         }
+     }              
      | "(" expression ")"  { $$ = $2; }
      | "-" expression %prec SIGNO   { $$ = -$2; }
      | "(" error ")"  { }
