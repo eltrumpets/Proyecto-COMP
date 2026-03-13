@@ -77,10 +77,17 @@
 %%
 
 program : { l = creaLS(); }
-          VOI IDE "(" ")" "{"body"}" 
+          VOI IDE { if(strcmp($3, "main") != 0){
+                printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, $3);
+                errores++;
+                    }
+                  }
+          "(" ")" "{"body"}" 
           {
-           if (errores == 0){
+            if (errores == 0){
                imprimirLS(l);
+            }else{
+                printf("\nErrores semanticos: %d\n", errores);
             }
             liberaLS(l); 
           }
@@ -118,7 +125,7 @@ statement : IDE "=" expression ";"
             } else {
                 Simbolo s = recuperaLS(l, p);
                 if(s.tipo == CONSTANTE){
-                    printf("Error en línea %d: no se le puede asignar a la constante '%s'\n", yylineno, $1);
+                    printf("Error en línea %d: %s es una constante'\n", yylineno, $1);
                     errores++;
                 }
             }
@@ -155,7 +162,7 @@ read_list : IDE
             } else {
                 Simbolo s = recuperaLS(l, p);
                 if(s.tipo == CONSTANTE){
-                    printf("Error en línea %d: no se le puede asignar a la constante '%s'\n", yylineno, $1);
+                    printf("Error en línea %d: '%s' es una constante\n", yylineno, $1);
                     errores++;
                 }
             }
@@ -169,7 +176,7 @@ read_list : IDE
             } else {
                 Simbolo s = recuperaLS(l, p);
                 if(s.tipo == CONSTANTE){
-                    printf("Error en línea %d: no se le puede asignar a la constante '%s'\n", yylineno, $3);
+                    printf("Error en línea %d: '%s' es una constante\n", yylineno, $3);
                     errores++;
                 }
             }
@@ -213,7 +220,6 @@ void declarar_id(char *id, Tipo t){
      if(p != finalLS(l)){
           printf("Error en linea %d: variable %s redeclarada\n", yylineno, id);
           errores++;
-
      }else{
           Simbolo s;
           s.nombre = id;
@@ -224,13 +230,16 @@ void declarar_id(char *id, Tipo t){
 }
 
 void declarar_cadena(char *cadena, Tipo t){
-     PosicionLista p = buscaLS(l, cadena);
-     Simbolo s;
-     s.nombre = cadena;
-     s.valor = numCadena++;
-     s.tipo = t;
-     insertaLS(l, finalLS(l),s);
-     
+    PosicionLista p = buscaLS(l, cadena);
+    if(p != finalLS(l)){
+    }else{
+        PosicionLista p = buscaLS(l, cadena);
+        Simbolo s;
+        s.nombre = cadena;
+        s.valor = numCadena++;
+        s.tipo = t;
+        insertaLS(l, finalLS(l),s);
+    }
 }
 
 
@@ -238,23 +247,23 @@ void declarar_cadena(char *cadena, Tipo t){
 void imprimirLS(Lista l){
      printf("##################\n");
      printf("# Seccion de datos\n");
-     printf(".data\n");
+     printf(".data\n\n");
      PosicionLista p = inicioLS(l);
-     p = inicioLS(l);
-    while (p != finalLS(l)) {
-        Simbolo aux = recuperaLS(l, p);
-        if(aux.tipo == VARIABLE || aux.tipo == CONSTANTE){
-            printf("_%s: .word %d\n", aux.nombre, aux.valor);
-        }
-        p = siguienteLS(l, p);
-    }
 
-    // cadenas
+         // cadenas
     p = inicioLS(l);
     while (p != finalLS(l)) {
         Simbolo aux = recuperaLS(l, p);
         if(aux.tipo == CADENA){
-            printf("$str%d: .asciiz %s\n", aux.valor, aux.nombre);
+            printf("$str%d:\n    .asciiz %s\n", aux.valor, aux.nombre);
+        }
+        p = siguienteLS(l, p);
+    }
+    p = inicioLS(l);
+    while (p != finalLS(l)) {
+        Simbolo aux = recuperaLS(l, p);
+        if(aux.tipo == VARIABLE || aux.tipo == CONSTANTE){
+            printf("_%s:\n    .word %d\n", aux.nombre, aux.valor);
         }
         p = siguienteLS(l, p);
     }

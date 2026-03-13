@@ -1,19 +1,11 @@
-void main() { 
-    const int 3a = 0, b = 0;
-
-    print ("Inicio del programa\n");
-
-    var int 2c = 5+2-2;
-
-    if (a) print ("a","\n");
-
-    else if (b) print ("No a y b\n");
+void prueba () {
+    var int a;
+    var int a;
+    const int a=0,b=0;
     
-    else while (c) {
-    
-        print ("c = ",c,"\n");
-    
-        c = c-2+1;
-    }
-    print ("Final","\n);
+    a = 5+x;
+    b = 5;
+    c = 0;
+    read (a, b);
+    read (c);
 }
