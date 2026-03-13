@@ -44,6 +44,7 @@ panico  [^a-zA-Z_0-9+\-*/ /; \t\n\r\"(){}]+
 "int"           { return INT; }
 "if"            { return IFF; }
 "else"          { return ELS; }
+"do"            { return DO;  }
 "while"         { return WHI; }
 "read"          { return REA; }
  /* Entre llaves para poner macros*/
@@ -55,6 +56,12 @@ panico  [^a-zA-Z_0-9+\-*/ /; \t\n\r\"(){}]+
                   yylval.str = strdup(yytext);
                   return IDE; 
                 }
+"<"             { return MNR; }
+">"             { return MYR; }
+"<="            { return MNI; }
+">="            { return MYI; }
+"=="            { return IG2; }
+"!="            { return DES; }
 "="             { return IGU; }
 "+"             { return SUM; }
 "-"             { return RES; }

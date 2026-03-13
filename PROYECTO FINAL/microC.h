@@ -21,3 +21,10 @@
 #define WHI 21
 #define REA 22
 #define DIV 23
+#define DO  24
+#define MNR 25
+#define MYR 26
+#define MNI 27
+#define MYI 28
+#define IG2 29
+#define DES 30 

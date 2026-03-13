@@ -74,11 +74,18 @@ extern int yydebug;
     INT = 275,                     /* "int"  */
     IFF = 276,                     /* "if"  */
     ELS = 277,                     /* "else"  */
-    WHI = 278,                     /* "while"  */
-    REA = 279,                     /* "read"  */
-    DIV = 280,                     /* "/"  */
-    SIGNO = 281,                   /* SIGNO  */
-    NOELSE = 282                   /* NOELSE  */
+    DO = 278,                      /* "do"  */
+    WHI = 279,                     /* "while"  */
+    REA = 280,                     /* "read"  */
+    DIV = 281,                     /* "/"  */
+    MNR = 282,                     /* "<"  */
+    MYR = 283,                     /* ">"  */
+    MNI = 284,                     /* "<="  */
+    MYI = 285,                     /* ">="  */
+    IG2 = 286,                     /* "=="  */
+    DES = 287,                     /* "!="  */
+    SIGNO = 288,                   /* SIGNO  */
+    NOELSE = 289                   /* NOELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -92,7 +99,7 @@ union YYSTYPE
   int num;
   char *str;
 
-#line 96 "microC.tab.h"
+#line 103 "microC.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -43,9 +43,16 @@
 %token INT "int"
 %token IFF "if"
 %token ELS "else"
+%token DO  "do"
 %token WHI "while"
 %token REA "read"
 %token DIV "/"
+%token MNR "<"
+%token MYR ">"
+%token MNI "<="
+%token MYI ">="
+%token IG2 "=="
+%token DES "!="
 
 // Tipo de dato de los no terinales de la gramática
 %type <num> expression 
@@ -122,20 +129,21 @@ statement : IDE "=" expression ";"
               if(p == finalLS(l)){
                 printf("Error en línea %d: variable '%s' no declarada\n", yylineno, $1);
                 errores++;
-            } else {
-                Simbolo s = recuperaLS(l, p);
-                if(s.tipo == CONSTANTE){
-                    printf("Error en línea %d: %s es una constante'\n", yylineno, $1);
-                    errores++;
+                } else {
+                    Simbolo s = recuperaLS(l, p);
+                    if(s.tipo == CONSTANTE){
+                        printf("Error en línea %d: %s es una constante'\n", yylineno, $1);
+                        errores++;
+                    }
                 }
-            }
             }
           | "{" statement_list "}"
           | "if" "(" expression ")" statement "else" statement 
           | "if" "(" expression ")" statement %prec NOELSE     
           | "while" "(" expression ")" statement   
           | "print" "(" print_list ")" ";"    
-          | "read" "(" read_list ")" ";"        
+          | "read" "(" read_list ")" ";"    
+          | "do" statement "while" "(" expression ")" ";" { printf("do-while"); }
           | error
           ;
 
@@ -205,6 +213,12 @@ expression : expression "+" expression { $$ = $1+$3; }
      }              
      | "(" expression ")"  { $$ = $2; }
      | "-" expression %prec SIGNO   { $$ = -$2; }
+     | expression "<" expression 
+     | expression ">" expression
+     | expression "<=" expression
+     | expression ">=" expression
+     | expression "==" expression
+     | expression "!=" expression
      | "(" error ")"  { }
      ;
 
