@@ -1,16 +1,3 @@
-Estado 52 conflictos: 6 desplazamiento/reducción
-Estado 79 conflictos: 6 desplazamiento/reducción
-Estado 80 conflictos: 6 desplazamiento/reducción
-Estado 81 conflictos: 6 desplazamiento/reducción
-Estado 82 conflictos: 6 desplazamiento/reducción
-Estado 83 conflictos: 10 desplazamiento/reducción
-Estado 84 conflictos: 10 desplazamiento/reducción
-Estado 85 conflictos: 10 desplazamiento/reducción
-Estado 86 conflictos: 10 desplazamiento/reducción
-Estado 87 conflictos: 10 desplazamiento/reducción
-Estado 88 conflictos: 10 desplazamiento/reducción
-
-
 Gramática
 
     0 $accept: program $end
@@ -733,19 +720,6 @@ Estado 52
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
-
-    "<"       [reduce usando la regla 40 (expression)]
-    ">"       [reduce usando la regla 40 (expression)]
-    "<="      [reduce usando la regla 40 (expression)]
-    ">="      [reduce usando la regla 40 (expression)]
-    "=="      [reduce usando la regla 40 (expression)]
-    "!="      [reduce usando la regla 40 (expression)]
     $default  reduce usando la regla 40 (expression)
 
 
@@ -1053,21 +1027,9 @@ Estado 79
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "<"       [reduce usando la regla 33 (expression)]
-    ">"       [reduce usando la regla 33 (expression)]
-    "<="      [reduce usando la regla 33 (expression)]
-    ">="      [reduce usando la regla 33 (expression)]
-    "=="      [reduce usando la regla 33 (expression)]
-    "!="      [reduce usando la regla 33 (expression)]
     $default  reduce usando la regla 33 (expression)
 
 
@@ -1085,21 +1047,9 @@ Estado 80
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "<"       [reduce usando la regla 34 (expression)]
-    ">"       [reduce usando la regla 34 (expression)]
-    "<="      [reduce usando la regla 34 (expression)]
-    ">="      [reduce usando la regla 34 (expression)]
-    "=="      [reduce usando la regla 34 (expression)]
-    "!="      [reduce usando la regla 34 (expression)]
     $default  reduce usando la regla 34 (expression)
 
 
@@ -1117,19 +1067,6 @@ Estado 81
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
-
-    "<"       [reduce usando la regla 35 (expression)]
-    ">"       [reduce usando la regla 35 (expression)]
-    "<="      [reduce usando la regla 35 (expression)]
-    ">="      [reduce usando la regla 35 (expression)]
-    "=="      [reduce usando la regla 35 (expression)]
-    "!="      [reduce usando la regla 35 (expression)]
     $default  reduce usando la regla 35 (expression)
 
 
@@ -1147,19 +1084,6 @@ Estado 82
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
-
-    "<"       [reduce usando la regla 36 (expression)]
-    ">"       [reduce usando la regla 36 (expression)]
-    "<="      [reduce usando la regla 36 (expression)]
-    ">="      [reduce usando la regla 36 (expression)]
-    "=="      [reduce usando la regla 36 (expression)]
-    "!="      [reduce usando la regla 36 (expression)]
     $default  reduce usando la regla 36 (expression)
 
 
@@ -1177,27 +1101,18 @@ Estado 83
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "+"   desplazar e ir al estado 56
-    "-"   desplazar e ir al estado 57
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "+"  desplazar e ir al estado 56
+    "-"  desplazar e ir al estado 57
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "+"       [reduce usando la regla 41 (expression)]
-    "-"       [reduce usando la regla 41 (expression)]
-    "*"       [reduce usando la regla 41 (expression)]
-    "/"       [reduce usando la regla 41 (expression)]
-    "<"       [reduce usando la regla 41 (expression)]
-    ">"       [reduce usando la regla 41 (expression)]
-    "<="      [reduce usando la regla 41 (expression)]
-    ">="      [reduce usando la regla 41 (expression)]
-    "=="      [reduce usando la regla 41 (expression)]
-    "!="      [reduce usando la regla 41 (expression)]
+    "<"   error (no asociativo)
+    ">"   error (no asociativo)
+    "<="  error (no asociativo)
+    ">="  error (no asociativo)
+    "=="  error (no asociativo)
+    "!="  error (no asociativo)
+
     $default  reduce usando la regla 41 (expression)
 
 
@@ -1215,27 +1130,18 @@ Estado 84
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "+"   desplazar e ir al estado 56
-    "-"   desplazar e ir al estado 57
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "+"  desplazar e ir al estado 56
+    "-"  desplazar e ir al estado 57
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "+"       [reduce usando la regla 42 (expression)]
-    "-"       [reduce usando la regla 42 (expression)]
-    "*"       [reduce usando la regla 42 (expression)]
-    "/"       [reduce usando la regla 42 (expression)]
-    "<"       [reduce usando la regla 42 (expression)]
-    ">"       [reduce usando la regla 42 (expression)]
-    "<="      [reduce usando la regla 42 (expression)]
-    ">="      [reduce usando la regla 42 (expression)]
-    "=="      [reduce usando la regla 42 (expression)]
-    "!="      [reduce usando la regla 42 (expression)]
+    "<"   error (no asociativo)
+    ">"   error (no asociativo)
+    "<="  error (no asociativo)
+    ">="  error (no asociativo)
+    "=="  error (no asociativo)
+    "!="  error (no asociativo)
+
     $default  reduce usando la regla 42 (expression)
 
 
@@ -1253,27 +1159,18 @@ Estado 85
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "+"   desplazar e ir al estado 56
-    "-"   desplazar e ir al estado 57
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "+"  desplazar e ir al estado 56
+    "-"  desplazar e ir al estado 57
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "+"       [reduce usando la regla 43 (expression)]
-    "-"       [reduce usando la regla 43 (expression)]
-    "*"       [reduce usando la regla 43 (expression)]
-    "/"       [reduce usando la regla 43 (expression)]
-    "<"       [reduce usando la regla 43 (expression)]
-    ">"       [reduce usando la regla 43 (expression)]
-    "<="      [reduce usando la regla 43 (expression)]
-    ">="      [reduce usando la regla 43 (expression)]
-    "=="      [reduce usando la regla 43 (expression)]
-    "!="      [reduce usando la regla 43 (expression)]
+    "<"   error (no asociativo)
+    ">"   error (no asociativo)
+    "<="  error (no asociativo)
+    ">="  error (no asociativo)
+    "=="  error (no asociativo)
+    "!="  error (no asociativo)
+
     $default  reduce usando la regla 43 (expression)
 
 
@@ -1291,27 +1188,18 @@ Estado 86
    45           | expression • "==" expression
    46           | expression • "!=" expression
 
-    "+"   desplazar e ir al estado 56
-    "-"   desplazar e ir al estado 57
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "+"  desplazar e ir al estado 56
+    "-"  desplazar e ir al estado 57
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "+"       [reduce usando la regla 44 (expression)]
-    "-"       [reduce usando la regla 44 (expression)]
-    "*"       [reduce usando la regla 44 (expression)]
-    "/"       [reduce usando la regla 44 (expression)]
-    "<"       [reduce usando la regla 44 (expression)]
-    ">"       [reduce usando la regla 44 (expression)]
-    "<="      [reduce usando la regla 44 (expression)]
-    ">="      [reduce usando la regla 44 (expression)]
-    "=="      [reduce usando la regla 44 (expression)]
-    "!="      [reduce usando la regla 44 (expression)]
+    "<"   error (no asociativo)
+    ">"   error (no asociativo)
+    "<="  error (no asociativo)
+    ">="  error (no asociativo)
+    "=="  error (no asociativo)
+    "!="  error (no asociativo)
+
     $default  reduce usando la regla 44 (expression)
 
 
@@ -1329,27 +1217,18 @@ Estado 87
    45           | expression "==" expression •
    46           | expression • "!=" expression
 
-    "+"   desplazar e ir al estado 56
-    "-"   desplazar e ir al estado 57
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "+"  desplazar e ir al estado 56
+    "-"  desplazar e ir al estado 57
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "+"       [reduce usando la regla 45 (expression)]
-    "-"       [reduce usando la regla 45 (expression)]
-    "*"       [reduce usando la regla 45 (expression)]
-    "/"       [reduce usando la regla 45 (expression)]
-    "<"       [reduce usando la regla 45 (expression)]
-    ">"       [reduce usando la regla 45 (expression)]
-    "<="      [reduce usando la regla 45 (expression)]
-    ">="      [reduce usando la regla 45 (expression)]
-    "=="      [reduce usando la regla 45 (expression)]
-    "!="      [reduce usando la regla 45 (expression)]
+    "<"   error (no asociativo)
+    ">"   error (no asociativo)
+    "<="  error (no asociativo)
+    ">="  error (no asociativo)
+    "=="  error (no asociativo)
+    "!="  error (no asociativo)
+
     $default  reduce usando la regla 45 (expression)
 
 
@@ -1367,27 +1246,18 @@ Estado 88
    46           | expression • "!=" expression
    46           | expression "!=" expression •
 
-    "+"   desplazar e ir al estado 56
-    "-"   desplazar e ir al estado 57
-    "*"   desplazar e ir al estado 58
-    "/"   desplazar e ir al estado 59
-    "<"   desplazar e ir al estado 60
-    ">"   desplazar e ir al estado 61
-    "<="  desplazar e ir al estado 62
-    ">="  desplazar e ir al estado 63
-    "=="  desplazar e ir al estado 64
-    "!="  desplazar e ir al estado 65
+    "+"  desplazar e ir al estado 56
+    "-"  desplazar e ir al estado 57
+    "*"  desplazar e ir al estado 58
+    "/"  desplazar e ir al estado 59
 
-    "+"       [reduce usando la regla 46 (expression)]
-    "-"       [reduce usando la regla 46 (expression)]
-    "*"       [reduce usando la regla 46 (expression)]
-    "/"       [reduce usando la regla 46 (expression)]
-    "<"       [reduce usando la regla 46 (expression)]
-    ">"       [reduce usando la regla 46 (expression)]
-    "<="      [reduce usando la regla 46 (expression)]
-    ">="      [reduce usando la regla 46 (expression)]
-    "=="      [reduce usando la regla 46 (expression)]
-    "!="      [reduce usando la regla 46 (expression)]
+    "<"   error (no asociativo)
+    ">"   error (no asociativo)
+    "<="  error (no asociativo)
+    ">="  error (no asociativo)
+    "=="  error (no asociativo)
+    "!="  error (no asociativo)
+
     $default  reduce usando la regla 46 (expression)
 
 

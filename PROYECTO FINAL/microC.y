@@ -68,6 +68,8 @@
 
    %precedence solo define precedencia, no asociatividad
 */
+
+%nonassoc "<" ">" "<=" ">=" "==" "!="
 %left "+" "-"
 %left "*" "/"
 %precedence SIGNO /* operador unario, para el caso de -E, tiene mayor precedencia que los operadores binarios */
@@ -213,12 +215,12 @@ expression : expression "+" expression { $$ = $1+$3; }
      }              
      | "(" expression ")"  { $$ = $2; }
      | "-" expression %prec SIGNO   { $$ = -$2; }
-     | expression "<" expression 
-     | expression ">" expression
-     | expression "<=" expression
-     | expression ">=" expression
-     | expression "==" expression
-     | expression "!=" expression
+     | expression "<" expression    { }
+     | expression ">" expression    { }
+     | expression "<=" expression   { }
+     | expression ">=" expression   { }
+     | expression "==" expression   { }
+     | expression "!=" expression   { }
      | "(" error ")"  { }
      ;
 

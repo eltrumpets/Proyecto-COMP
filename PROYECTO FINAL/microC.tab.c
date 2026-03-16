@@ -494,7 +494,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  3
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   224
+#define YYLAST   234
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  35
@@ -555,11 +555,11 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    86,    86,    87,    86,   103,   104,   105,   108,   108,
-     109,   109,   112,   115,   116,   119,   122,   127,   140,   141,
-     142,   143,   144,   145,   146,   147,   150,   151,   154,   155,
-     158,   159,   164,   178,   194,   195,   196,   197,   204,   205,
-     214,   215,   216,   217,   218,   219,   220,   221,   222
+       0,    88,    88,    89,    88,   105,   106,   107,   110,   110,
+     111,   111,   114,   117,   118,   121,   124,   129,   142,   143,
+     144,   145,   146,   147,   148,   149,   152,   153,   156,   157,
+     160,   161,   166,   180,   196,   197,   198,   199,   206,   207,
+     216,   217,   218,   219,   220,   221,   222,   223,   224
 };
 #endif
 
@@ -601,23 +601,23 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 #define YYTABLE_NINF (-1)
 
 #define yytable_value_is_error(Yyn) \
-  0
+  ((Yyn) == YYTABLE_NINF)
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     -23,     3,    -6,   -23,    12,   -23,    13,    11,    23,   -23,
-     151,   -23,    27,   -23,   -23,    35,   -23,   -23,    36,   182,
-      38,    39,   -23,   -23,    40,   176,    55,    34,    34,    40,
-       9,    40,    54,   -23,    40,   120,   -23,    -2,   -23,   -23,
-     -23,     4,   -23,   119,   -23,    56,    56,    50,    53,    78,
-     -23,     6,   192,    57,    85,   -23,    40,    40,    40,    40,
-      40,    40,    40,    40,    40,    40,    61,    55,    66,     5,
-     -23,     7,   182,    40,   182,    69,    70,   -23,   -23,   186,
-     186,   192,   192,   119,   119,   119,   119,   119,   119,   -23,
-     -23,    40,   -23,    56,   -23,    51,   112,   -23,   -23,   -23,
-     119,   -23,   182,    72,   -23,   -23
+     -23,     3,    -6,   -23,    12,   -23,    21,    22,    37,   -23,
+     178,   -23,    41,   -23,   -23,    38,   -23,   -23,    39,   209,
+      44,    48,   -23,   -23,    40,   203,    55,    -3,    -3,    40,
+      36,    40,    59,   -23,    40,   120,   -23,    -2,   -23,   -23,
+     -23,     4,   -23,   119,   -23,    60,    60,    50,    58,    78,
+     -23,     9,   -23,    61,    85,   -23,    40,    40,    40,    40,
+      40,    40,    40,    40,    40,    40,    68,    55,    69,     5,
+     -23,     7,   209,    40,   209,    70,    71,   -23,   -23,     6,
+       6,   -23,   -23,   146,   146,   146,   146,   146,   146,   -23,
+     -23,    40,   -23,    60,   -23,    64,   112,   -23,   -23,   -23,
+     119,   -23,   209,    84,   -23,   -23
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -641,8 +641,8 @@ static const yytype_int8 yydefact[] =
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -23,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    58,    41,
-      -5,   -19,   -23,   -23,    26,   -23,   -22
+     -23,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    62,    42,
+       0,   -19,   -23,   -23,    28,   -23,   -22
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -658,55 +658,57 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yytable[] =
 {
       30,    55,    37,     3,    56,    57,    39,    47,    92,    49,
-      94,     4,    52,    54,    58,    66,     5,    75,    67,    93,
-      76,    93,     8,     7,    59,    60,    61,    62,    63,    64,
-      65,     9,    24,    48,    79,    80,    81,    82,    83,    84,
-      85,    86,    87,    88,    33,    26,    29,    34,    31,    32,
-      35,    96,    36,    95,    44,    97,    56,    57,    50,    33,
-      68,    72,    34,    73,    89,    35,    58,    36,    77,   100,
-      40,    91,    98,   102,    99,   105,    59,    60,    61,    62,
-      63,    64,    65,   104,    56,    57,    46,    71,   101,    74,
-       0,    56,    57,    90,    58,     0,    78,     0,     0,     0,
+      94,     4,    52,    54,    58,    66,     5,    44,    67,    93,
+      75,    93,    58,    76,    59,    60,    61,    62,    63,    64,
+      65,     7,    59,     8,    79,    80,    81,    82,    83,    84,
+      85,    86,    87,    88,    33,     9,    24,    34,    26,    29,
+      35,    96,    36,    95,    31,    97,    56,    57,    32,    33,
+      48,    72,    34,    50,    68,    35,    58,    36,    73,   100,
+      40,    89,    77,    98,    91,    99,    59,    60,    61,    62,
+      63,    64,    65,   104,    56,    57,   102,   105,    71,    74,
+      46,    56,    57,   101,    58,    90,    78,     0,     0,     0,
        0,    58,     0,     0,    59,    60,    61,    62,    63,    64,
       65,    59,    60,    61,    62,    63,    64,    65,    56,    57,
        0,    53,     0,   103,    33,    56,    57,    34,    58,     0,
       35,     0,    36,     0,     0,    58,     0,     0,    59,    60,
       61,    62,    63,    64,    65,    59,    60,    61,    62,    63,
-      64,    65,    11,     0,     0,    12,     0,     0,     0,    13,
-      14,     0,     0,     0,    15,     0,     0,     0,     0,    16,
-      17,     0,    18,     0,    19,    20,    21,    11,     0,     0,
-      12,     0,     0,    11,    13,    38,    12,     0,     0,    15,
-      13,     0,     0,     0,     0,    15,     0,    18,     0,    19,
-      20,    21,    58,    18,     0,    19,    20,    21,     0,     0,
-       0,     0,    59,    60,    61,    62,    63,    64,    65,    60,
-      61,    62,    63,    64,    65
+      64,    65,    56,    57,     0,     0,     0,     0,     0,     0,
+       0,     0,    58,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    59,    -1,    -1,    -1,    -1,    -1,    -1,    11,
+       0,     0,    12,     0,     0,     0,    13,    14,     0,     0,
+       0,    15,     0,     0,     0,     0,    16,    17,     0,    18,
+       0,    19,    20,    21,    11,     0,     0,    12,     0,     0,
+      11,    13,    38,    12,     0,     0,    15,    13,     0,     0,
+       0,     0,    15,     0,    18,     0,    19,    20,    21,     0,
+      18,     0,    19,    20,    21
 };
 
 static const yytype_int8 yycheck[] =
 {
       19,     3,    24,     0,     6,     7,    25,    29,     3,    31,
-       3,    17,    34,    35,    16,    11,     4,    11,    14,    14,
-      14,    14,    11,    10,    26,    27,    28,    29,    30,    31,
-      32,     8,     5,    24,    56,    57,    58,    59,    60,    61,
-      62,    63,    64,    65,     4,    10,    10,     7,    10,    10,
-      10,    73,    12,    72,    20,    74,     6,     7,     4,     4,
-       4,    11,     7,    10,     3,    10,    16,    12,    11,    91,
-      15,     5,     3,    22,     4,     3,    26,    27,    28,    29,
-      30,    31,    32,   102,     6,     7,    28,    46,    93,    11,
-      -1,     6,     7,    67,    16,    -1,    11,    -1,    -1,    -1,
+       3,    17,    34,    35,    16,    11,     4,    20,    14,    14,
+      11,    14,    16,    14,    26,    27,    28,    29,    30,    31,
+      32,    10,    26,    11,    56,    57,    58,    59,    60,    61,
+      62,    63,    64,    65,     4,     8,     5,     7,    10,    10,
+      10,    73,    12,    72,    10,    74,     6,     7,    10,     4,
+      24,    11,     7,     4,     4,    10,    16,    12,    10,    91,
+      15,     3,    11,     3,     5,     4,    26,    27,    28,    29,
+      30,    31,    32,   102,     6,     7,    22,     3,    46,    11,
+      28,     6,     7,    93,    16,    67,    11,    -1,    -1,    -1,
       -1,    16,    -1,    -1,    26,    27,    28,    29,    30,    31,
       32,    26,    27,    28,    29,    30,    31,    32,     6,     7,
       -1,     1,    -1,    11,     4,     6,     7,     7,    16,    -1,
       10,    -1,    12,    -1,    -1,    16,    -1,    -1,    26,    27,
       28,    29,    30,    31,    32,    26,    27,    28,    29,    30,
-      31,    32,     1,    -1,    -1,     4,    -1,    -1,    -1,     8,
-       9,    -1,    -1,    -1,    13,    -1,    -1,    -1,    -1,    18,
-      19,    -1,    21,    -1,    23,    24,    25,     1,    -1,    -1,
-       4,    -1,    -1,     1,     8,     9,     4,    -1,    -1,    13,
-       8,    -1,    -1,    -1,    -1,    13,    -1,    21,    -1,    23,
-      24,    25,    16,    21,    -1,    23,    24,    25,    -1,    -1,
-      -1,    -1,    26,    27,    28,    29,    30,    31,    32,    27,
-      28,    29,    30,    31,    32
+      31,    32,     6,     7,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    16,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    26,    27,    28,    29,    30,    31,    32,     1,
+      -1,    -1,     4,    -1,    -1,    -1,     8,     9,    -1,    -1,
+      -1,    13,    -1,    -1,    -1,    -1,    18,    19,    -1,    21,
+      -1,    23,    24,    25,     1,    -1,    -1,     4,    -1,    -1,
+       1,     8,     9,     4,    -1,    -1,    13,     8,    -1,    -1,
+      -1,    -1,    13,    -1,    21,    -1,    23,    24,    25,    -1,
+      21,    -1,    23,    24,    25
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -1477,23 +1479,23 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 86 "microC.y"
+#line 88 "microC.y"
           { l = creaLS(); }
-#line 1483 "microC.tab.c"
+#line 1485 "microC.tab.c"
     break;
 
   case 3: /* $@2: %empty  */
-#line 87 "microC.y"
+#line 89 "microC.y"
                   { if(strcmp((yyvsp[0].str), "main") != 0){
                 printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, (yyvsp[0].str));
                 errores++;
                     }
                   }
-#line 1493 "microC.tab.c"
+#line 1495 "microC.tab.c"
     break;
 
   case 4: /* program: $@1 "void" "identifier" $@2 "(" ")" "{" body "}"  */
-#line 93 "microC.y"
+#line 95 "microC.y"
           {
             if (errores == 0){
                imprimirLS(l);
@@ -1502,45 +1504,45 @@ yyreduce:
             }
             liberaLS(l); 
           }
-#line 1506 "microC.tab.c"
+#line 1508 "microC.tab.c"
     break;
 
   case 8: /* $@3: %empty  */
-#line 108 "microC.y"
+#line 110 "microC.y"
                   { t = VARIABLE; }
-#line 1512 "microC.tab.c"
+#line 1514 "microC.tab.c"
     break;
 
   case 10: /* $@4: %empty  */
-#line 109 "microC.y"
+#line 111 "microC.y"
                   { t = CONSTANTE; }
-#line 1518 "microC.tab.c"
+#line 1520 "microC.tab.c"
     break;
 
   case 12: /* tipo: "int"  */
-#line 112 "microC.y"
+#line 114 "microC.y"
               { (yyval.str) = "int"; }
-#line 1524 "microC.tab.c"
+#line 1526 "microC.tab.c"
     break;
 
   case 15: /* id_decl: "identifier"  */
-#line 119 "microC.y"
+#line 121 "microC.y"
               {
             declarar_id((yyvsp[0].str), t);
         }
-#line 1532 "microC.tab.c"
+#line 1534 "microC.tab.c"
     break;
 
   case 16: /* id_decl: "identifier" "=" expression  */
-#line 122 "microC.y"
+#line 124 "microC.y"
                              {
             declarar_id((yyvsp[-2].str),t);
         }
-#line 1540 "microC.tab.c"
+#line 1542 "microC.tab.c"
     break;
 
   case 17: /* statement: "identifier" "=" expression ";"  */
-#line 128 "microC.y"
+#line 130 "microC.y"
             { PosicionLista p = buscaLS(l, (yyvsp[-3].str));
               if(p == finalLS(l)){
                 printf("Error en línea %d: variable '%s' no declarada\n", yylineno, (yyvsp[-3].str));
@@ -1553,25 +1555,25 @@ yyreduce:
                     }
                 }
             }
-#line 1557 "microC.tab.c"
+#line 1559 "microC.tab.c"
     break;
 
   case 24: /* statement: "do" statement "while" "(" expression ")" ";"  */
-#line 146 "microC.y"
+#line 148 "microC.y"
                                                           { printf("do-while"); }
-#line 1563 "microC.tab.c"
+#line 1565 "microC.tab.c"
     break;
 
   case 31: /* print_item: "cadena"  */
-#line 159 "microC.y"
+#line 161 "microC.y"
                  {
                declarar_cadena((yyvsp[0].str),CADENA);
            }
-#line 1571 "microC.tab.c"
+#line 1573 "microC.tab.c"
     break;
 
   case 32: /* read_list: "identifier"  */
-#line 165 "microC.y"
+#line 167 "microC.y"
             {  
               PosicionLista p = buscaLS(l, (yyvsp[0].str));
               if(p == finalLS(l)){
@@ -1585,11 +1587,11 @@ yyreduce:
                 }
             }
             }
-#line 1589 "microC.tab.c"
+#line 1591 "microC.tab.c"
     break;
 
   case 33: /* read_list: read_list "," "identifier"  */
-#line 179 "microC.y"
+#line 181 "microC.y"
           {
               PosicionLista p = buscaLS(l, (yyvsp[0].str));
               if(p == finalLS(l)){
@@ -1603,29 +1605,29 @@ yyreduce:
                 }
             }
           }
-#line 1607 "microC.tab.c"
+#line 1609 "microC.tab.c"
     break;
 
   case 34: /* expression: expression "+" expression  */
-#line 194 "microC.y"
+#line 196 "microC.y"
                                        { (yyval.num) = (yyvsp[-2].num)+(yyvsp[0].num); }
-#line 1613 "microC.tab.c"
+#line 1615 "microC.tab.c"
     break;
 
   case 35: /* expression: expression "-" expression  */
-#line 195 "microC.y"
+#line 197 "microC.y"
                                  { (yyval.num) = (yyvsp[-2].num)-(yyvsp[0].num); }
-#line 1619 "microC.tab.c"
+#line 1621 "microC.tab.c"
     break;
 
   case 36: /* expression: expression "*" expression  */
-#line 196 "microC.y"
+#line 198 "microC.y"
                                  { (yyval.num) = (yyvsp[-2].num) * (yyvsp[0].num); }
-#line 1625 "microC.tab.c"
+#line 1627 "microC.tab.c"
     break;
 
   case 37: /* expression: expression "/" expression  */
-#line 197 "microC.y"
+#line 199 "microC.y"
                                  { if ((yyvsp[0].num) == 0){
                          printf("División por 0 en línea %d\n",
                                 yylineno);
@@ -1633,17 +1635,17 @@ yyreduce:
                        }
                        (yyval.num) = (yyvsp[-2].num) / (yyvsp[0].num);
                      }
-#line 1637 "microC.tab.c"
+#line 1639 "microC.tab.c"
     break;
 
   case 38: /* expression: "number"  */
-#line 204 "microC.y"
+#line 206 "microC.y"
            { (yyval.num) = (yyvsp[0].num); }
-#line 1643 "microC.tab.c"
+#line 1645 "microC.tab.c"
     break;
 
   case 39: /* expression: "identifier"  */
-#line 205 "microC.y"
+#line 207 "microC.y"
            { PosicionLista p = buscaLS(l, (yyvsp[0].str));
          if(p == finalLS(l)){
              printf("Error en línea %d: variable '%s' no declarada\n", yylineno, (yyvsp[0].str));
@@ -1653,29 +1655,65 @@ yyreduce:
              (yyval.num) = 0;
          }
      }
-#line 1657 "microC.tab.c"
+#line 1659 "microC.tab.c"
     break;
 
   case 40: /* expression: "(" expression ")"  */
-#line 214 "microC.y"
+#line 216 "microC.y"
                            { (yyval.num) = (yyvsp[-1].num); }
-#line 1663 "microC.tab.c"
+#line 1665 "microC.tab.c"
     break;
 
   case 41: /* expression: "-" expression  */
-#line 215 "microC.y"
+#line 217 "microC.y"
                                     { (yyval.num) = -(yyvsp[0].num); }
-#line 1669 "microC.tab.c"
+#line 1671 "microC.tab.c"
+    break;
+
+  case 42: /* expression: expression "<" expression  */
+#line 218 "microC.y"
+                                    { }
+#line 1677 "microC.tab.c"
+    break;
+
+  case 43: /* expression: expression ">" expression  */
+#line 219 "microC.y"
+                                    { }
+#line 1683 "microC.tab.c"
+    break;
+
+  case 44: /* expression: expression "<=" expression  */
+#line 220 "microC.y"
+                                    { }
+#line 1689 "microC.tab.c"
+    break;
+
+  case 45: /* expression: expression ">=" expression  */
+#line 221 "microC.y"
+                                    { }
+#line 1695 "microC.tab.c"
+    break;
+
+  case 46: /* expression: expression "==" expression  */
+#line 222 "microC.y"
+                                    { }
+#line 1701 "microC.tab.c"
+    break;
+
+  case 47: /* expression: expression "!=" expression  */
+#line 223 "microC.y"
+                                    { }
+#line 1707 "microC.tab.c"
     break;
 
   case 48: /* expression: "(" error ")"  */
-#line 222 "microC.y"
+#line 224 "microC.y"
                       { }
-#line 1675 "microC.tab.c"
+#line 1713 "microC.tab.c"
     break;
 
 
-#line 1679 "microC.tab.c"
+#line 1717 "microC.tab.c"
 
       default: break;
     }
@@ -1899,7 +1937,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 225 "microC.y"
+#line 227 "microC.y"
 
 
 void yyerror(const char *msg){
