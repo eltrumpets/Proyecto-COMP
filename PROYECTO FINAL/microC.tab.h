@@ -44,6 +44,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 38 "microC.y"
+
+    #include "listaCodigo.h"
+
+#line 53 "microC.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -63,27 +69,27 @@ extern int yydebug;
     COD = 264,                     /* "}"  */
     PAI = 265,                     /* "("  */
     PAD = 266,                     /* ")"  */
-    NUM = 267,                     /* "number"  */
-    PRI = 268,                     /* "print"  */
-    COM = 269,                     /* ","  */
-    CAD = 270,                     /* "cadena"  */
-    MUL = 271,                     /* "*"  */
-    VOI = 272,                     /* "void"  */
-    VAR = 273,                     /* "var"  */
-    CON = 274,                     /* "const"  */
-    INT = 275,                     /* "int"  */
-    IFF = 276,                     /* "if"  */
-    ELS = 277,                     /* "else"  */
-    DO = 278,                      /* "do"  */
-    WHI = 279,                     /* "while"  */
-    REA = 280,                     /* "read"  */
-    DIV = 281,                     /* "/"  */
-    MNR = 282,                     /* "<"  */
-    MYR = 283,                     /* ">"  */
-    MNI = 284,                     /* "<="  */
-    MYI = 285,                     /* ">="  */
-    IG2 = 286,                     /* "=="  */
-    DES = 287,                     /* "!="  */
+    PRI = 267,                     /* "print"  */
+    COM = 268,                     /* ","  */
+    CAD = 269,                     /* "cadena"  */
+    MUL = 270,                     /* "*"  */
+    VOI = 271,                     /* "void"  */
+    VAR = 272,                     /* "var"  */
+    CON = 273,                     /* "const"  */
+    INT = 274,                     /* "int"  */
+    IFF = 275,                     /* "if"  */
+    ELS = 276,                     /* "else"  */
+    DO = 277,                      /* "do"  */
+    WHI = 278,                     /* "while"  */
+    REA = 279,                     /* "read"  */
+    DIV = 280,                     /* "/"  */
+    MNR = 281,                     /* "<"  */
+    MYR = 282,                     /* ">"  */
+    MNI = 283,                     /* "<="  */
+    MYI = 284,                     /* ">="  */
+    IG2 = 285,                     /* "=="  */
+    DES = 286,                     /* "!="  */
+    NUM = 287,                     /* "number"  */
     SIGNO = 288,                   /* SIGNO  */
     NOELSE = 289                   /* NOELSE  */
   };
@@ -94,12 +100,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "microC.y"
+#line 42 "microC.y"
 
-  int num;
+  ListaC codigo;
   char *str;
 
-#line 103 "microC.tab.h"
+#line 109 "microC.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

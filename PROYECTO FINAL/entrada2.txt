@@ -4,13 +4,8 @@ void main() {
     var int num = 0;
 
     print("Inicio del programa\n");
-    var int c = 5+2-a;
+    var int c = 5+2;
 
-    do{
-        c = d +5;
-        print("Hol");
-        num = num+1;
-    } while(b);
     if (a<b) 
         print("a","\n");
     else if (b) 
@@ -20,6 +15,8 @@ void main() {
             print("c = ",c,"\n");
             c = c-2+1;
         }
+    /* Hola
+    aaa */
 
     print("Final","\n");
 }

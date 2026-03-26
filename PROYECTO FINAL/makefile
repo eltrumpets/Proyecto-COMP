@@ -1,5 +1,5 @@
-microC : lex.yy.c microC.tab.c main.c listaSimbolos.c
-	gcc lex.yy.c microC.tab.c main.c listaSimbolos.c -lfl -o microC
+microC : lex.yy.c microC.tab.c main.c listaSimbolos.c listaCodigo.c
+	gcc lex.yy.c microC.tab.c main.c listaSimbolos.c listaCodigo.c -lfl -o microC
 
 lex.yy.c : microC.l microC.tab.h
 	flex microC.l

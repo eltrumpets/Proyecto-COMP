@@ -1023,7 +1023,7 @@ YY_RULE_SETUP
                             yylineno, yytext);
                     contador_error++;
                   }
-                  yylval.num = entero;
+                  yylval.str = strdup(yytext);
                   return NUM; 
                               }
 	YY_BREAK

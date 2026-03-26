@@ -81,7 +81,7 @@ panico  [^a-zA-Z_0-9+\-*/ /; \t\n\r\"(){}]+
                             yylineno, yytext);
                     contador_error++;
                   }
-                  yylval.num = entero;
+                  yylval.str = strdup(yytext);
                   return NUM; 
                               }
 \"([^"\n\\]|\\["ntr\\])*\"   { yylval.str = strdup(yytext);
