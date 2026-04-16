@@ -36,6 +36,8 @@
     char *nuevaEtiqueta();
     void imprimirLC(ListaC codigo);
     ListaC statement_while(ListaC expr, ListaC stat);
+    ListaC statement_if(ListaC expr, ListaC stat);
+    ListaC statement_if_else(ListaC expr, ListaC stat_if, ListaC stat_else);
     
 
 %}
@@ -184,10 +186,9 @@ statement : IDE "=" expression ";" { verificar_id($1);
           | "{" statement_list "}" { if(errores == 0){
                                         $$ = $2; 
                                      } }
-          | "if" "(" expression ")" statement "else" statement { }
-          | "if" "(" expression ")" statement %prec NOELSE { }
-          | "while" "(" expression ")" statement { $$ = statement_while($3,$5); 
-                                        /*concatenaLC(codigoTotal, $$);*/ }
+          | "if" "(" expression ")" statement "else" statement { $$ = statement_if_else($3,$5,$7); }
+          | "if" "(" expression ")" statement %prec NOELSE { $$ = statement_if($3,$5); }
+          | "while" "(" expression ")" statement { $$ = statement_while($3,$5); }
           | "print" "(" print_list ")" ";" { $$ = $3; }    
           | "read" "(" read_list ")" ";" { $$ = $3; }
           | "do" statement "while" "(" expression ")" ";" { }
@@ -235,7 +236,9 @@ print_item : expression { if(errores == 0){
                         insertaLC($$, finalLC($$), o);
                         o.op = "la";
                         o.res = "$a0";
-                        asprintf(&(o.arg1), "$str%d", numCadena-1);
+                        PosicionLista p = buscaLS(l, $1);
+                        Simbolo s = recuperaLS(l, p);
+                        asprintf(&(o.arg1), "$str%d", s.valor);
                         o.arg2 = NULL;
                         insertaLC($$, finalLC($$), o);
                         o.op = "syscall";
@@ -483,6 +486,54 @@ ListaC statement_while(ListaC expr, ListaC stat){
     return codigo;
 }
 
+ListaC statement_if(ListaC expr, ListaC stat){  
+    char *etiq_fin = nuevaEtiqueta();
+    Operacion o;
+    ListaC codigo = creaLC();
+
+    concatenaLC(codigo, expr);
+    o.op = "beqz";
+    o.res = recuperaResLC(expr);
+    o.arg1 = etiq_fin;
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    concatenaLC(codigo, stat);
+    o.op = etiq_fin;
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    liberarReg(recuperaResLC(expr));
+    //liberaLC(expr);
+    //liberaLC(stat);
+    return codigo;
+}
+
+ListaC statement_if_else(ListaC expr, ListaC stat_if, ListaC stat_else){  
+    char *etiq_else = nuevaEtiqueta();
+    char *etiq_fin = nuevaEtiqueta();
+    Operacion o;
+    ListaC codigo = creaLC();
+    concatenaLC(codigo, expr);
+    o.op = "beqz";
+    o.res = recuperaResLC(expr);
+    o.arg1 = etiq_else;
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    concatenaLC(codigo, stat_if);
+    o.op = "b";
+    o.res = etiq_fin;
+    o.arg1 = NULL;
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    o.op = etiq_else;
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    concatenaLC(codigo, stat_else);
+    o.op = etiq_fin;
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    liberarReg(recuperaResLC(expr));
+    return codigo;
+}
 
 
 void imprimirLC(ListaC codigo){
