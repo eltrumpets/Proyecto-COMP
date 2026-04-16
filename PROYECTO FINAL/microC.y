@@ -82,7 +82,7 @@
 
 
 // Tipo de dato de los no terinales de la gramática
-%type <codigo> expression statement statement_list print_item print_list read_list
+%type <codigo> expression statement statement_list print_item print_list read_list declaration id_list id_decl body
 %type <str> tipo
 
 %expect 0
@@ -130,27 +130,41 @@ program : { l = creaLS();
           }
         ;
 
-body : body declaration { }
-     | body statement   { }
-     | %empty           { }
+body : body declaration { concatenaLC(codigoTotal, $2); }
+     | body statement   { concatenaLC(codigoTotal, $2); }
+     | %empty           { $$ = creaLC(); }
      ; 
 
-declaration : VAR { t = VARIABLE; }tipo id_list ";" 
-            | CON { t = CONSTANTE; } tipo id_list ";" 
+declaration : VAR { t = VARIABLE; }tipo id_list ";" { $$ = $4; }
+            | CON { t = CONSTANTE; } tipo id_list ";" { $$ = $4; }
             ;
 
 tipo : INT    { $$ = "int"; }
      ;
 
-id_list : id_decl 
-        | id_list "," id_decl 
+id_list : id_decl { $$ = $1; }
+        | id_list "," id_decl { $$ = $1;
+                            concatenaLC($$, $3);
+                            liberaLC($3); }
         ;
 
 id_decl : IDE {
             declarar_id($1, t);
-        }
+            $$ = creaLC(); }
         | IDE "=" expression {
             declarar_id($1,t);
+            $$ = creaLC();
+            if(errores == 0){
+                // Generar codigo para la asignacion
+                $$ = $3;
+                Operacion o;
+                o.op = "sw";
+                o.res = recuperaResLC($3);
+                asprintf(&(o.arg1), "_%s", $1);
+                o.arg2 = NULL;
+                insertaLC($$, finalLC($$), o);
+                liberarReg(o.res);
+            }
         }
         ;
 
@@ -172,7 +186,8 @@ statement : IDE "=" expression ";" { verificar_id($1);
                                      } }
           | "if" "(" expression ")" statement "else" statement { }
           | "if" "(" expression ")" statement %prec NOELSE { }
-          | "while" "(" expression ")" statement { $$ = statement_while($3,$5); }
+          | "while" "(" expression ")" statement { $$ = statement_while($3,$5); 
+                                        /*concatenaLC(codigoTotal, $$);*/ }
           | "print" "(" print_list ")" ";" { $$ = $3; }    
           | "read" "(" read_list ")" ";" { $$ = $3; }
           | "do" statement "while" "(" expression ")" ";" { }
@@ -184,8 +199,10 @@ statement_list : statement_list statement { $$ = $1;
                | %empty { $$ = creaLC(); }
                ;
 
-print_list : print_item { }
-           | print_list "," print_item { }
+print_list : print_item { $$ = $1; }
+           | print_list "," print_item { $$ = $1;
+               concatenaLC($$, $3);
+               liberaLC($3); }
            ;
 
 print_item : expression { if(errores == 0){
@@ -205,7 +222,6 @@ print_item : expression { if(errores == 0){
                                 o.res = o.arg1 = o.arg2 = NULL;
                                 insertaLC($$, finalLC($$), o);
                                 liberarReg(recuperaResLC($1));
-                                concatenaLC(codigoTotal, $$);
                             }
               }
            | CAD { declarar_cadena($1,CADENA); 
@@ -225,7 +241,6 @@ print_item : expression { if(errores == 0){
                         o.op = "syscall";
                         o.res = o.arg1 = o.arg2 = NULL;
                         insertaLC($$, finalLC($$), o);
-                        concatenaLC(codigoTotal, $$);
                     }
                  }
            ;
@@ -388,8 +403,8 @@ char *obtenerReg(){
 
 void liberarReg(char *reg){
     // reg == $tX
-    assert(reg[0] = '$');
-    assert(reg[1] = 't');
+    assert(reg[0] == '$');
+    assert(reg[1] == 't');
     int index = (reg[2]) - '0';
     assert(index >= 0);
     assert(index <= 9);
@@ -463,8 +478,8 @@ ListaC statement_while(ListaC expr, ListaC stat){
     o.res = o.arg1 = o.arg2 = NULL;
     insertaLC(codigo, finalLC(codigo), o);
     liberarReg(recuperaResLC(expr));
-    liberaLC(expr);
-    liberaLC(stat);
+    //liberaLC(expr);
+    //liberaLC(stat);
     return codigo;
 }
 
@@ -481,7 +496,8 @@ void imprimirLC(ListaC codigo){
         Operacion oper = recuperaLC(codigo,p);
         if(oper.op[0] == '$'){
             // Etiqueta de salto
-            printf("%s:\n", oper.op);
+            printf("%s:\n", oper.op);   // ✅ Usa el nombre real de la etiqueta
+            p = siguienteLC(codigo, p); // ✅ Avanza el puntero
         }else{
             printf("    %s",oper.op);
             if (oper.res) printf(" %s",oper.res);
