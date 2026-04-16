@@ -12,6 +12,7 @@
     extern int yylineno;
     extern int errores;
     int numCadena = 1;
+    int contador_etiq = 1;
     void yyerror(const char *msg);
     void comprobar_division(ListaC expre);
     // Lista de simbolos
@@ -32,7 +33,9 @@
     ListaC expresion_id(char *id);
     ListaC expresion_bin(char *op, ListaC expr1, ListaC expr2);
     ListaC expresion_neg(ListaC expr);
+    char *nuevaEtiqueta();
     void imprimirLC(ListaC codigo);
+    ListaC statement_while(ListaC expr, ListaC stat);
     
 
 %}
@@ -79,7 +82,7 @@
 
 
 // Tipo de dato de los no terinales de la gramática
-%type <codigo> expression 
+%type <codigo> expression statement statement_list print_item print_list read_list
 %type <str> tipo
 
 %expect 0
@@ -119,6 +122,7 @@ program : { l = creaLS();
             if (errores == 0){
                imprimirLS(l);
                imprimirLC(codigoTotal);
+               
             }else{
                 printf("\nErrores semanticos: %d\n", errores);
             }
@@ -126,9 +130,9 @@ program : { l = creaLS();
           }
         ;
 
-body : body declaration
-     | body statement
-     | %empty
+body : body declaration { }
+     | body statement   { }
+     | %empty           { }
      ; 
 
 declaration : VAR { t = VARIABLE; }tipo id_list ";" 
@@ -151,29 +155,101 @@ id_decl : IDE {
         ;
 
 statement : IDE "=" expression ";" { verificar_id($1);
-                                     concatenaLC(codigoTotal, $3);   }
-          | "{" statement_list "}"
-          | "if" "(" expression ")" statement "else" statement 
-          | "if" "(" expression ")" statement %prec NOELSE     
-          | "while" "(" expression ")" statement   
-          | "print" "(" print_list ")" ";"    
-          | "read" "(" read_list ")" ";"    
+                                     // Verificacion temporal
+                                     if (errores == 0){
+                                        $$ = $3;
+                                        Operacion o;
+                                        o.op = "sw";
+                                        o.res = recuperaResLC($3);
+                                        asprintf(&(o.arg1), "_%s", $1);
+                                        o.arg2 = NULL;
+                                        insertaLC($$, finalLC($$), o);
+                                        liberarReg(o.res);
+                                     }
+                                     concatenaLC(codigoTotal,$3);   }
+          | "{" statement_list "}" { if(errores == 0){
+                                        $$ = $2; 
+                                     } }
+          | "if" "(" expression ")" statement "else" statement { }
+          | "if" "(" expression ")" statement %prec NOELSE { }
+          | "while" "(" expression ")" statement { $$ = statement_while($3,$5); }
+          | "print" "(" print_list ")" ";" { $$ = $3; }    
+          | "read" "(" read_list ")" ";" { $$ = $3; }
           | "do" statement "while" "(" expression ")" ";" { }
           ;
 
-statement_list : statement_list statement
-               | %empty
+statement_list : statement_list statement { $$ = $1;
+                                            concatenaLC($$, $2);
+                                            liberaLC($2); }
+               | %empty { $$ = creaLC(); }
                ;
 
-print_list : print_item         
-           | print_list "," print_item
+print_list : print_item { }
+           | print_list "," print_item { }
            ;
 
-print_item : expression 
-           | CAD { declarar_cadena($1,CADENA); }
+print_item : expression { if(errores == 0){
+                                $$ = $1;
+                                Operacion o;
+                                o.op = "li";
+                                o.res = "$v0";
+                                o.arg1 = "1";
+                                o.arg2 = NULL;
+                                insertaLC($$, finalLC($$), o);
+                                o.op = "move";
+                                o.res = "$a0";
+                                o.arg1 = recuperaResLC($1);
+                                o.arg2 = NULL;
+                                insertaLC($$, finalLC($$), o);
+                                o.op = "syscall";
+                                o.res = o.arg1 = o.arg2 = NULL;
+                                insertaLC($$, finalLC($$), o);
+                                liberarReg(recuperaResLC($1));
+                                concatenaLC(codigoTotal, $$);
+                            }
+              }
+           | CAD { declarar_cadena($1,CADENA); 
+                    if(errores == 0){
+                        $$ = creaLC();
+                        Operacion o;
+                        o.op = "li";
+                        o.res = "$v0";
+                        o.arg1 = "4";
+                        o.arg2 = NULL;
+                        insertaLC($$, finalLC($$), o);
+                        o.op = "la";
+                        o.res = "$a0";
+                        asprintf(&(o.arg1), "$str%d", numCadena-1);
+                        o.arg2 = NULL;
+                        insertaLC($$, finalLC($$), o);
+                        o.op = "syscall";
+                        o.res = o.arg1 = o.arg2 = NULL;
+                        insertaLC($$, finalLC($$), o);
+                        concatenaLC(codigoTotal, $$);
+                    }
+                 }
            ;
 
-read_list : IDE { verificar_id($1); }
+read_list : IDE { verificar_id($1); 
+                    if(errores == 0){
+                        $$ = creaLC();
+                        Operacion o;
+                        o.op = "li";
+                        o.res = "$v0";
+                        o.arg1 = "5";
+                        o.arg2 = NULL;
+                        insertaLC($$, finalLC($$), o);
+                        o.op = "syscall";
+                        o.res = o.arg1 = o.arg2 = NULL;
+                        insertaLC($$, finalLC($$), o);
+                        o.op = "sw";
+                        asprintf(&(o.res), "_%s", $1);
+                        o.arg1 = "$v0";
+                        o.arg2 = NULL;
+                        insertaLC($$, finalLC($$), o);
+                        concatenaLC(codigoTotal, $$);
+                    }
+                 }
           | read_list "," IDE { verificar_id($3); }
 
 expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
@@ -200,11 +276,13 @@ expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
 
 %%
 
+// Accion que se ejecuta al detectar un error sintáctico y suma el contador de errores
 void yyerror(const char *msg){
     printf("Error sintáctico en línea %d: %s\n", yylineno, msg);
     errores++;
 }
 
+// Accion que comprueba si la division tiene como denominador un 0 y suma el contador de errores
 void comprobar_division(ListaC expre){
     if (expre == 0){
         printf("División por 0 en línea %d\n", yylineno);
@@ -212,6 +290,7 @@ void comprobar_division(ListaC expre){
     }
 }
 
+// Accion que declara un id en la tabla de simbolos, comprobando que no haya sido declarado previamente
 void declarar_id(char *id, Tipo t){
      PosicionLista p = buscaLS(l, id);
      if(p != finalLS(l)){
@@ -237,6 +316,12 @@ void declarar_cadena(char *cadena, Tipo t){
         s.tipo = t;
         insertaLS(l, finalLS(l),s);
     }
+}
+
+char *nuevaEtiqueta(){
+    char *aux;
+    asprintf(&aux, "$l%d", contador_etiq++);
+    return aux;
 }
 
 
@@ -346,6 +431,7 @@ ListaC expresion_bin(char *op, ListaC expr1, ListaC expr2){
         concatenaLC(codigo, expr2);
         o.arg2 = recuperaResLC(expr2);
         liberarReg(o.arg2);
+        liberaLC(expr2);
     } else {
         o.arg2 = NULL;
     }
@@ -353,20 +439,58 @@ ListaC expresion_bin(char *op, ListaC expr1, ListaC expr2){
     return codigo;
 }
 
+ListaC statement_while(ListaC expr, ListaC stat){  
+    char *etiq_inicio = nuevaEtiqueta();
+    char *etiq_fin = nuevaEtiqueta();
+    Operacion o;
+    o.op = etiq_inicio;
+    o.res = o.arg1 = o.arg2 = NULL;
+    ListaC codigo = creaLC();
+    insertaLC(codigo, finalLC(codigo), o);
+    concatenaLC(codigo, expr);
+    o.op = "beqz";
+    o.res = recuperaResLC(expr);
+    o.arg1 = etiq_fin;
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    concatenaLC(codigo, stat);
+    o.op = "b";
+    o.res = etiq_inicio;
+    o.arg1 = NULL;
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    o.op = etiq_fin;
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    liberarReg(recuperaResLC(expr));
+    liberaLC(expr);
+    liberaLC(stat);
+    return codigo;
+}
+
+
+
 void imprimirLC(ListaC codigo){
     printf("##################\n");
     printf("# Seccion de codigo\n");
     printf("    .text\n");
-    printf("    .globl main\n");
+    printf("    .global main\n");
     printf("main:\n");
     PosicionListaC p = inicioLC(codigo);
     while (p != finalLC(codigo)) {
         Operacion oper = recuperaLC(codigo,p);
-        printf("    %s",oper.op);
-        if (oper.res) printf(" %s",oper.res);
-        if (oper.arg1) printf(",%s",oper.arg1);
-        if (oper.arg2) printf(",%s",oper.arg2);
-        printf("\n");
-        p = siguienteLC(codigo,p);
+        if(oper.op[0] == '$'){
+            // Etiqueta de salto
+            printf("%s:\n", oper.op);
+        }else{
+            printf("    %s",oper.op);
+            if (oper.res) printf(" %s",oper.res);
+            if (oper.arg1) printf(",%s",oper.arg1);
+            if (oper.arg2) printf(",%s",oper.arg2);
+            printf("\n");
+            p = siguienteLC(codigo,p);
+        }
   }
+    printf("    li $v0, 10\n");
+    printf("    syscall\n");
 }

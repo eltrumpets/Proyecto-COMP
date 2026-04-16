@@ -15,3 +15,9 @@ run1 : microC entrada.txt
 
 run2 : microC entrada2.txt
 	./microC entrada2.txt
+
+run3 : microC test1.txt
+	./microC test1.txt
+
+run4 : microC test4.txt
+	./microC test4.txt
