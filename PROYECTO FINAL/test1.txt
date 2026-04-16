@@ -1,4 +1,5 @@
 void main(){
     var int a;
-    a = (1 - 4);
+    a = -(1 - 4);
+    print("hola");
 }

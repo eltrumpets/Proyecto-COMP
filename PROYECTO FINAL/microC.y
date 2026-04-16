@@ -23,6 +23,7 @@
     // Variable para determinar si el id es VAR o CONST
     Tipo t;
     // Lista de codigo
+    ListaC codigoTotal;
     bool registros[10];
     void inicializarRegs();
     char *obtenerReg();
@@ -30,6 +31,7 @@
     ListaC expresion_num(char *num);
     ListaC expresion_id(char *id);
     ListaC expresion_bin(char *op, ListaC expr1, ListaC expr2);
+    ListaC expresion_neg(ListaC expr);
     void imprimirLC(ListaC codigo);
     
 
@@ -105,7 +107,8 @@
 
 %%
 
-program : { l = creaLS(); }
+program : { l = creaLS();
+            codigoTotal = creaLC(); }
           VOI IDE { if(strcmp($3, "main") != 0){
                 printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, $3);
                 errores++;
@@ -115,6 +118,7 @@ program : { l = creaLS(); }
           {
             if (errores == 0){
                imprimirLS(l);
+               imprimirLC(codigoTotal);
             }else{
                 printf("\nErrores semanticos: %d\n", errores);
             }
@@ -147,7 +151,7 @@ id_decl : IDE {
         ;
 
 statement : IDE "=" expression ";" { verificar_id($1);
-                                     imprimirLC($3);   }
+                                     concatenaLC(codigoTotal, $3);   }
           | "{" statement_list "}"
           | "if" "(" expression ")" statement "else" statement 
           | "if" "(" expression ")" statement %prec NOELSE     
@@ -184,7 +188,7 @@ expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
      | IDE { verificar_id($1);
              $$ = expresion_id($1); }              
      | "(" expression ")"  { $$ = $2; }
-     | "-" expression %prec SIGNO   {   }
+     | "-" expression %prec SIGNO   { $$ = expresion_bin("neg", $2, NULL); }
      | expression "<" expression    { }
      | expression ">" expression    { }
      | expression "<=" expression   { }
@@ -240,7 +244,7 @@ void declarar_cadena(char *cadena, Tipo t){
 void imprimirLS(Lista l){
      printf("##################\n");
      printf("# Seccion de datos\n");
-     printf(".data\n\n");
+     printf("    .data\n\n");
      PosicionLista p = inicioLS(l);
 
          // cadenas
@@ -260,6 +264,7 @@ void imprimirLS(Lista l){
         }
         p = siguienteLS(l, p);
     }
+    printf("\n");
 }
 
 void verificar_id(char *id){
@@ -332,24 +337,32 @@ ListaC expresion_id(char *id){
 }
 
 ListaC expresion_bin(char *op, ListaC expr1, ListaC expr2){
-    ListaC codigo;
-    codigo = expr1;
-    concatenaLC(codigo, expr2);
+    ListaC codigo = expr1;
     Operacion o;
     o.op = op;
     o.res = recuperaResLC(expr1);
     o.arg1 = recuperaResLC(expr1);
-    o.arg2 = recuperaResLC(expr2);
+    if(expr2 != NULL){
+        concatenaLC(codigo, expr2);
+        o.arg2 = recuperaResLC(expr2);
+        liberarReg(o.arg2);
+    } else {
+        o.arg2 = NULL;
+    }
     insertaLC(codigo, finalLC(codigo), o);
-    liberarReg(o.arg2);
     return codigo;
 }
 
 void imprimirLC(ListaC codigo){
+    printf("##################\n");
+    printf("# Seccion de codigo\n");
+    printf("    .text\n");
+    printf("    .globl main\n");
+    printf("main:\n");
     PosicionListaC p = inicioLC(codigo);
     while (p != finalLC(codigo)) {
         Operacion oper = recuperaLC(codigo,p);
-        printf("%s",oper.op);
+        printf("    %s",oper.op);
         if (oper.res) printf(" %s",oper.res);
         if (oper.arg1) printf(",%s",oper.arg1);
         if (oper.arg2) printf(",%s",oper.arg2);
