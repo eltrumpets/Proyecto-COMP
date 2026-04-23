@@ -20,7 +20,7 @@
     void declarar_id(char *id, Tipo t);
     void imprimirLS(Lista l);
     void declarar_cadena(char *cadena, Tipo t);
-    void verificar_id(char *id);
+    void verificar_id(char *id, int esLectura);
     // Variable para determinar si el id es VAR o CONST
     Tipo t;
     // Lista de codigo
@@ -38,6 +38,8 @@
     ListaC statement_while(ListaC expr, ListaC stat);
     ListaC statement_if(ListaC expr, ListaC stat);
     ListaC statement_if_else(ListaC expr, ListaC stat_if, ListaC stat_else);
+    // MEJORA DEL DO_WHILE
+    ListaC statement_do_while(ListaC stat, ListaC expr);
     
 
 %}
@@ -157,7 +159,6 @@ id_decl : IDE {
             declarar_id($1,t);
             $$ = creaLC();
             if(errores == 0){
-                // Generar codigo para la asignacion
                 $$ = $3;
                 Operacion o;
                 o.op = "sw";
@@ -170,8 +171,7 @@ id_decl : IDE {
         }
         ;
 
-statement : IDE "=" expression ";" { verificar_id($1);
-                                     // Verificacion temporal
+statement : IDE "=" expression ";" { verificar_id($1, 0);
                                      if (errores == 0){
                                         $$ = $3;
                                         Operacion o;
@@ -182,16 +182,25 @@ statement : IDE "=" expression ";" { verificar_id($1);
                                         insertaLC($$, finalLC($$), o);
                                         liberarReg(o.res);
                                      }
-                                     concatenaLC(codigoTotal,$3);   }
+                                     /*concatenaLC(codigoTotal,$3);*/   }
           | "{" statement_list "}" { if(errores == 0){
                                         $$ = $2; 
                                      } }
-          | "if" "(" expression ")" statement "else" statement { $$ = statement_if_else($3,$5,$7); }
-          | "if" "(" expression ")" statement %prec NOELSE { $$ = statement_if($3,$5); }
-          | "while" "(" expression ")" statement { $$ = statement_while($3,$5); }
+          | "if" "(" expression ")" statement "else" statement { if(errores == 0){
+                                                                    $$ = statement_if_else($3,$5,$7);               
+                                                                } }
+          | "if" "(" expression ")" statement %prec NOELSE { if(errores == 0){
+                                                                $$ = statement_if($3,$5);
+                                                              } }
+          | "while" "(" expression ")" statement { if(errores == 0){
+                                                    $$ = statement_while($3,$5);
+                                                  } }
           | "print" "(" print_list ")" ";" { $$ = $3; }    
           | "read" "(" read_list ")" ";" { $$ = $3; }
-          | "do" statement "while" "(" expression ")" ";" { }
+          | "do" statement "while" "(" expression ")" ";" { if(errores == 0){
+                                                                // MEJORA DEL DO_WHILE
+                                                                $$ = statement_do_while($2, $5);
+                                                    } }
           ;
 
 statement_list : statement_list statement { $$ = $1;
@@ -248,7 +257,7 @@ print_item : expression { if(errores == 0){
                  }
            ;
 
-read_list : IDE { verificar_id($1); 
+read_list : IDE { verificar_id($1, 1);
                     if(errores == 0){
                         $$ = creaLC();
                         Operacion o;
@@ -261,14 +270,30 @@ read_list : IDE { verificar_id($1);
                         o.res = o.arg1 = o.arg2 = NULL;
                         insertaLC($$, finalLC($$), o);
                         o.op = "sw";
-                        asprintf(&(o.res), "_%s", $1);
-                        o.arg1 = "$v0";
+                        o.res = "$v0";
+                        asprintf(&(o.arg1), "_%s", $1); 
                         o.arg2 = NULL;
                         insertaLC($$, finalLC($$), o);
-                        concatenaLC(codigoTotal, $$);
                     }
                  }
-          | read_list "," IDE { verificar_id($3); }
+          | read_list "," IDE { verificar_id($3, 1);
+                                if(errores == 0){
+                                    $$ = $1;
+                                    Operacion o;
+                                    o.op = "li";
+                                    o.res = "$v0";
+                                    o.arg1 = "5";
+                                    o.arg2 = NULL;
+                                    insertaLC($$, finalLC($$), o);
+                                    o.op = "syscall";
+                                    o.res = o.arg1 = o.arg2 = NULL;
+                                    insertaLC($$, finalLC($$), o);
+                                    o.op = "sw";
+                                    o.res = "$v0";
+                                    asprintf(&(o.arg1), "_%s", $3); 
+                                    o.arg2 = NULL;
+                                    insertaLC($$, finalLC($$), o);
+                                                                } }
 
 expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
                                         
@@ -279,7 +304,7 @@ expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
      | expression "/" expression { comprobar_division($3);
                                    $$ = expresion_bin("div", $1, $3); }
      | NUM { $$ = expresion_num($1); }
-     | IDE { verificar_id($1);
+     | IDE { verificar_id($1, 1);
              $$ = expresion_id($1); }              
      | "(" expression ")"  { $$ = $2; }
      | "-" expression %prec SIGNO   { $$ = expresion_bin("neg", $2, NULL); }
@@ -370,14 +395,14 @@ void imprimirLS(Lista l){
     printf("\n");
 }
 
-void verificar_id(char *id){
+void verificar_id(char *id, int esLectura){
     PosicionLista p = buscaLS(l, id);
     if(p == finalLS(l)){
         printf("Error en línea %d: variable '%s' no declarada\n", yylineno, id);
         errores++;
     } else {
         Simbolo s = recuperaLS(l, p);
-        if(s.tipo == CONSTANTE){
+        if(s.tipo == CONSTANTE && esLectura == 0){
             printf("Error en línea %d: '%s' es una constante\n", yylineno, id);
             errores++;
         }
@@ -497,13 +522,14 @@ ListaC statement_if(ListaC expr, ListaC stat){
     o.arg1 = etiq_fin;
     o.arg2 = NULL;
     insertaLC(codigo, finalLC(codigo), o);
+    liberarReg(recuperaResLC(expr));
     concatenaLC(codigo, stat);
     o.op = etiq_fin;
     o.res = o.arg1 = o.arg2 = NULL;
     insertaLC(codigo, finalLC(codigo), o);
-    liberarReg(recuperaResLC(expr));
-    //liberaLC(expr);
-    //liberaLC(stat);
+    concatenaLC(codigoTotal, codigo);
+    liberaLC(expr);
+    liberaLC(stat);
     return codigo;
 }
 
@@ -535,6 +561,25 @@ ListaC statement_if_else(ListaC expr, ListaC stat_if, ListaC stat_else){
     return codigo;
 }
 
+// MEJORA DEL DO_WHILE
+ListaC statement_do_while(ListaC stat, ListaC expr){  
+    char *etiq_inicio = nuevaEtiqueta();
+    Operacion o;
+    ListaC codigo = creaLC();
+    o.op = etiq_inicio;
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    concatenaLC(codigo, stat);
+    concatenaLC(codigo, expr);
+    o.op = "bnez";
+    o.res = recuperaResLC(expr);
+    o.arg1 = etiq_inicio;
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    liberarReg(recuperaResLC(expr));
+    return codigo;
+}
+
 
 void imprimirLC(ListaC codigo){
     printf("##################\n");
@@ -545,10 +590,10 @@ void imprimirLC(ListaC codigo){
     PosicionListaC p = inicioLC(codigo);
     while (p != finalLC(codigo)) {
         Operacion oper = recuperaLC(codigo,p);
-        if(oper.op[0] == '$'){
+        if(oper.op[0] == '$' && oper.op[1] == 'l'){
             // Etiqueta de salto
-            printf("%s:\n", oper.op);   // ✅ Usa el nombre real de la etiqueta
-            p = siguienteLC(codigo, p); // ✅ Avanza el puntero
+            printf("%s:\n", oper.op);  
+            p = siguienteLC(codigo, p); 
         }else{
             printf("    %s",oper.op);
             if (oper.res) printf(" %s",oper.res);

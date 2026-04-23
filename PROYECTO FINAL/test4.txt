@@ -1,7 +1,7 @@
 void main() {
     const int a = 0, b = 0;
     print ("Inicio del programa\n");
-    var int c = 5+2-2;
+    var int c = 5+a-2;
     if (c) print ("a","\n");
     else if (c) print ("No a y b\n");
         else while (c) {

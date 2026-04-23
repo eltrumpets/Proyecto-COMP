@@ -2,10 +2,10 @@ void main() {
     const int a = 0, b = 0;
     print ("Inicio del programa", 42);
     var int c = 5+2-2;
-    if (c) print ("a","\n");
+    if (a) print ("a","\n");
     while (c) {
         c = c + 1;
-        c = c-2+1;
+        c = b-2+1;
     }
     print ("Final","\n");
 }
