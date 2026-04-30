@@ -77,6 +77,7 @@
     #include <assert.h>
     #include "listaSimbolos.h"
     #include "listaCodigo.h"
+    
 
     extern int yylex();
     extern int yylineno;
@@ -110,10 +111,15 @@
     ListaC statement_if_else(ListaC expr, ListaC stat_if, ListaC stat_else);
     // MEJORA DEL DO_WHILE
     ListaC statement_do_while(ListaC stat, ListaC expr);
+    // GENERACION DE CODIGO
+    ListaC genCodigo_sw(ListaC expr, char *ide);
+    ListaC genCodigo_print(ListaC expr);
+    ListaC genCodigo_printCAD(char* cad);
+    ListaC genCodigo_read(ListaC lista_leida, char* ide);
     
 
 
-#line 117 "microC.tab.c"
+#line 123 "microC.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -579,13 +585,13 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int16 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,   117,   117,   119,   117,   137,   138,   139,   142,   142,
-     143,   143,   146,   149,   150,   155,   158,   174,   186,   189,
-     192,   195,   198,   199,   200,   206,   209,   212,   213,   218,
-     237,   260,   279,   298,   302,   303,   304,   306,   307,   309,
-     310,   311,   312,   313,   314,   315,   316,   317
+       0,   123,   123,   125,   123,   143,   144,   145,   148,   148,
+     149,   149,   152,   155,   156,   161,   164,   172,   177,   180,
+     183,   186,   189,   190,   191,   197,   200,   203,   204,   209,
+     213,   220,   227,   235,   239,   240,   241,   243,   244,   246,
+     247,   248,   249,   250,   251,   252,   253,   254
 };
 #endif
 
@@ -1501,24 +1507,24 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 117 "microC.y"
+#line 123 "microC.y"
           { l = creaLS();
             codigoTotal = creaLC(); }
-#line 1508 "microC.tab.c"
+#line 1514 "microC.tab.c"
     break;
 
   case 3: /* $@2: %empty  */
-#line 119 "microC.y"
+#line 125 "microC.y"
                   { if(strcmp((yyvsp[0].str), "main") != 0){
                 printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, (yyvsp[0].str));
                 errores++;
                     }
                   }
-#line 1518 "microC.tab.c"
+#line 1524 "microC.tab.c"
     break;
 
   case 4: /* program: $@1 "void" "identifier" $@2 "(" ")" "{" body "}"  */
-#line 125 "microC.y"
+#line 131 "microC.y"
           {
             if (errores == 0){
                imprimirLS(l);
@@ -1529,390 +1535,321 @@ yyreduce:
             }
             liberaLS(l); 
           }
-#line 1533 "microC.tab.c"
-    break;
-
-  case 5: /* body: body declaration  */
-#line 137 "microC.y"
-                        { concatenaLC(codigoTotal, (yyvsp[0].codigo)); }
 #line 1539 "microC.tab.c"
     break;
 
-  case 6: /* body: body statement  */
-#line 138 "microC.y"
+  case 5: /* body: body declaration  */
+#line 143 "microC.y"
                         { concatenaLC(codigoTotal, (yyvsp[0].codigo)); }
 #line 1545 "microC.tab.c"
     break;
 
-  case 7: /* body: %empty  */
-#line 139 "microC.y"
-                        { (yyval.codigo) = creaLC(); }
+  case 6: /* body: body statement  */
+#line 144 "microC.y"
+                        { concatenaLC(codigoTotal, (yyvsp[0].codigo)); }
 #line 1551 "microC.tab.c"
     break;
 
-  case 8: /* $@3: %empty  */
-#line 142 "microC.y"
-                  { t = VARIABLE; }
+  case 7: /* body: %empty  */
+#line 145 "microC.y"
+                        { (yyval.codigo) = creaLC(); }
 #line 1557 "microC.tab.c"
     break;
 
-  case 9: /* declaration: "var" $@3 tipo id_list ";"  */
-#line 142 "microC.y"
-                                                    { (yyval.codigo) = (yyvsp[-1].codigo); }
+  case 8: /* $@3: %empty  */
+#line 148 "microC.y"
+                  { t = VARIABLE; }
 #line 1563 "microC.tab.c"
     break;
 
-  case 10: /* $@4: %empty  */
-#line 143 "microC.y"
-                  { t = CONSTANTE; }
+  case 9: /* declaration: "var" $@3 tipo id_list ";"  */
+#line 148 "microC.y"
+                                                    { (yyval.codigo) = (yyvsp[-1].codigo); }
 #line 1569 "microC.tab.c"
     break;
 
-  case 11: /* declaration: "const" $@4 tipo id_list ";"  */
-#line 143 "microC.y"
-                                                      { (yyval.codigo) = (yyvsp[-1].codigo); }
+  case 10: /* $@4: %empty  */
+#line 149 "microC.y"
+                  { t = CONSTANTE; }
 #line 1575 "microC.tab.c"
     break;
 
-  case 12: /* tipo: "int"  */
-#line 146 "microC.y"
-              { (yyval.str) = "int"; }
+  case 11: /* declaration: "const" $@4 tipo id_list ";"  */
+#line 149 "microC.y"
+                                                      { (yyval.codigo) = (yyvsp[-1].codigo); }
 #line 1581 "microC.tab.c"
     break;
 
-  case 13: /* id_list: id_decl  */
-#line 149 "microC.y"
-                  { (yyval.codigo) = (yyvsp[0].codigo); }
+  case 12: /* tipo: "int"  */
+#line 152 "microC.y"
+              { (yyval.str) = "int"; }
 #line 1587 "microC.tab.c"
     break;
 
+  case 13: /* id_list: id_decl  */
+#line 155 "microC.y"
+                  { (yyval.codigo) = (yyvsp[0].codigo); }
+#line 1593 "microC.tab.c"
+    break;
+
   case 14: /* id_list: id_list "," id_decl  */
-#line 150 "microC.y"
+#line 156 "microC.y"
                               { (yyval.codigo) = (yyvsp[-2].codigo);
                             concatenaLC((yyval.codigo), (yyvsp[0].codigo));
                             liberaLC((yyvsp[0].codigo)); }
-#line 1595 "microC.tab.c"
+#line 1601 "microC.tab.c"
     break;
 
   case 15: /* id_decl: "identifier"  */
-#line 155 "microC.y"
+#line 161 "microC.y"
               {
             declarar_id((yyvsp[0].str), t);
             (yyval.codigo) = creaLC(); }
-#line 1603 "microC.tab.c"
+#line 1609 "microC.tab.c"
     break;
 
   case 16: /* id_decl: "identifier" "=" expression  */
-#line 158 "microC.y"
+#line 164 "microC.y"
                              {
             declarar_id((yyvsp[-2].str),t);
-            (yyval.codigo) = creaLC();
             if(errores == 0){
-                (yyval.codigo) = (yyvsp[0].codigo);
-                Operacion o;
-                o.op = "sw";
-                o.res = recuperaResLC((yyvsp[0].codigo));
-                asprintf(&(o.arg1), "_%s", (yyvsp[-2].str));
-                o.arg2 = NULL;
-                insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                liberarReg(o.res);
+                (yyval.codigo) = genCodigo_sw((yyvsp[0].codigo), (yyvsp[-2].str));
             }
         }
-#line 1622 "microC.tab.c"
+#line 1620 "microC.tab.c"
     break;
 
   case 17: /* statement: "identifier" "=" expression ";"  */
-#line 174 "microC.y"
+#line 172 "microC.y"
                                    { verificar_id((yyvsp[-3].str), 0);
                                      if (errores == 0){
-                                        (yyval.codigo) = (yyvsp[-1].codigo);
-                                        Operacion o;
-                                        o.op = "sw";
-                                        o.res = recuperaResLC((yyvsp[-1].codigo));
-                                        asprintf(&(o.arg1), "_%s", (yyvsp[-3].str));
-                                        o.arg2 = NULL;
-                                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                        liberarReg(o.res);
+                                        (yyval.codigo) = genCodigo_sw((yyvsp[-1].codigo), (yyvsp[-3].str));
                                      }
                                      /*concatenaLC(codigoTotal,$3);*/   }
-#line 1639 "microC.tab.c"
+#line 1630 "microC.tab.c"
     break;
 
   case 18: /* statement: "{" statement_list "}"  */
-#line 186 "microC.y"
+#line 177 "microC.y"
                                    { if(errores == 0){
                                         (yyval.codigo) = (yyvsp[-1].codigo); 
                                      } }
-#line 1647 "microC.tab.c"
+#line 1638 "microC.tab.c"
     break;
 
   case 19: /* statement: "if" "(" expression ")" statement "else" statement  */
-#line 189 "microC.y"
+#line 180 "microC.y"
                                                                { if(errores == 0){
                                                                     (yyval.codigo) = statement_if_else((yyvsp[-4].codigo),(yyvsp[-2].codigo),(yyvsp[0].codigo));               
                                                                 } }
-#line 1655 "microC.tab.c"
+#line 1646 "microC.tab.c"
     break;
 
   case 20: /* statement: "if" "(" expression ")" statement  */
-#line 192 "microC.y"
+#line 183 "microC.y"
                                                            { if(errores == 0){
                                                                 (yyval.codigo) = statement_if((yyvsp[-2].codigo),(yyvsp[0].codigo));
                                                               } }
-#line 1663 "microC.tab.c"
+#line 1654 "microC.tab.c"
     break;
 
   case 21: /* statement: "while" "(" expression ")" statement  */
-#line 195 "microC.y"
+#line 186 "microC.y"
                                                  { if(errores == 0){
                                                     (yyval.codigo) = statement_while((yyvsp[-2].codigo),(yyvsp[0].codigo));
                                                   } }
-#line 1671 "microC.tab.c"
+#line 1662 "microC.tab.c"
     break;
 
   case 22: /* statement: "print" "(" print_list ")" ";"  */
-#line 198 "microC.y"
+#line 189 "microC.y"
                                            { (yyval.codigo) = (yyvsp[-2].codigo); }
-#line 1677 "microC.tab.c"
+#line 1668 "microC.tab.c"
     break;
 
   case 23: /* statement: "read" "(" read_list ")" ";"  */
-#line 199 "microC.y"
+#line 190 "microC.y"
                                          { (yyval.codigo) = (yyvsp[-2].codigo); }
-#line 1683 "microC.tab.c"
+#line 1674 "microC.tab.c"
     break;
 
   case 24: /* statement: "do" statement "while" "(" expression ")" ";"  */
-#line 200 "microC.y"
+#line 191 "microC.y"
                                                           { if(errores == 0){
                                                                 // MEJORA DEL DO_WHILE
                                                                 (yyval.codigo) = statement_do_while((yyvsp[-5].codigo), (yyvsp[-2].codigo));
                                                     } }
-#line 1692 "microC.tab.c"
+#line 1683 "microC.tab.c"
     break;
 
   case 25: /* statement_list: statement_list statement  */
-#line 206 "microC.y"
+#line 197 "microC.y"
                                           { (yyval.codigo) = (yyvsp[-1].codigo);
                                             concatenaLC((yyval.codigo), (yyvsp[0].codigo));
                                             liberaLC((yyvsp[0].codigo)); }
-#line 1700 "microC.tab.c"
+#line 1691 "microC.tab.c"
     break;
 
   case 26: /* statement_list: %empty  */
-#line 209 "microC.y"
+#line 200 "microC.y"
                         { (yyval.codigo) = creaLC(); }
-#line 1706 "microC.tab.c"
+#line 1697 "microC.tab.c"
     break;
 
   case 27: /* print_list: print_item  */
-#line 212 "microC.y"
+#line 203 "microC.y"
                         { (yyval.codigo) = (yyvsp[0].codigo); }
-#line 1712 "microC.tab.c"
+#line 1703 "microC.tab.c"
     break;
 
   case 28: /* print_list: print_list "," print_item  */
-#line 213 "microC.y"
+#line 204 "microC.y"
                                        { (yyval.codigo) = (yyvsp[-2].codigo);
                concatenaLC((yyval.codigo), (yyvsp[0].codigo));
                liberaLC((yyvsp[0].codigo)); }
-#line 1720 "microC.tab.c"
+#line 1711 "microC.tab.c"
     break;
 
   case 29: /* print_item: expression  */
-#line 218 "microC.y"
+#line 209 "microC.y"
                         { if(errores == 0){
-                                (yyval.codigo) = (yyvsp[0].codigo);
-                                Operacion o;
-                                o.op = "li";
-                                o.res = "$v0";
-                                o.arg1 = "1";
-                                o.arg2 = NULL;
-                                insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                o.op = "move";
-                                o.res = "$a0";
-                                o.arg1 = recuperaResLC((yyvsp[0].codigo));
-                                o.arg2 = NULL;
-                                insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                o.op = "syscall";
-                                o.res = o.arg1 = o.arg2 = NULL;
-                                insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                liberarReg(recuperaResLC((yyvsp[0].codigo)));
+                                (yyval.codigo) = genCodigo_print((yyvsp[0].codigo));
                             }
               }
-#line 1744 "microC.tab.c"
+#line 1720 "microC.tab.c"
     break;
 
   case 30: /* print_item: "cadena"  */
-#line 237 "microC.y"
+#line 213 "microC.y"
                  { declarar_cadena((yyvsp[0].str),CADENA); 
                     if(errores == 0){
-                        (yyval.codigo) = creaLC();
-                        Operacion o;
-                        o.op = "li";
-                        o.res = "$v0";
-                        o.arg1 = "4";
-                        o.arg2 = NULL;
-                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                        o.op = "la";
-                        o.res = "$a0";
-                        PosicionLista p = buscaLS(l, (yyvsp[0].str));
-                        Simbolo s = recuperaLS(l, p);
-                        asprintf(&(o.arg1), "$str%d", s.valor);
-                        o.arg2 = NULL;
-                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                        o.op = "syscall";
-                        o.res = o.arg1 = o.arg2 = NULL;
-                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
+                        (yyval.codigo) = genCodigo_printCAD((yyvsp[0].str));
                     }
                  }
-#line 1770 "microC.tab.c"
+#line 1730 "microC.tab.c"
     break;
 
   case 31: /* read_list: "identifier"  */
-#line 260 "microC.y"
+#line 220 "microC.y"
                 { verificar_id((yyvsp[0].str), 1);
                     if(errores == 0){
+                        (yyval.codigo) = genCodigo_read(NULL, (yyvsp[0].str));
+                    } else {
                         (yyval.codigo) = creaLC();
-                        Operacion o;
-                        o.op = "li";
-                        o.res = "$v0";
-                        o.arg1 = "5";
-                        o.arg2 = NULL;
-                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                        o.op = "syscall";
-                        o.res = o.arg1 = o.arg2 = NULL;
-                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                        o.op = "sw";
-                        o.res = "$v0";
-                        asprintf(&(o.arg1), "_%s", (yyvsp[0].str)); 
-                        o.arg2 = NULL;
-                        insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
                     }
                  }
-#line 1794 "microC.tab.c"
+#line 1742 "microC.tab.c"
     break;
 
   case 32: /* read_list: read_list "," "identifier"  */
-#line 279 "microC.y"
+#line 227 "microC.y"
                               { verificar_id((yyvsp[0].str), 1);
                                 if(errores == 0){
+                                    (yyval.codigo) = genCodigo_read((yyvsp[-2].codigo), (yyvsp[0].str));
+                                } else {
                                     (yyval.codigo) = (yyvsp[-2].codigo);
-                                    Operacion o;
-                                    o.op = "li";
-                                    o.res = "$v0";
-                                    o.arg1 = "5";
-                                    o.arg2 = NULL;
-                                    insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                    o.op = "syscall";
-                                    o.res = o.arg1 = o.arg2 = NULL;
-                                    insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                    o.op = "sw";
-                                    o.res = "$v0";
-                                    asprintf(&(o.arg1), "_%s", (yyvsp[0].str)); 
-                                    o.arg2 = NULL;
-                                    insertaLC((yyval.codigo), finalLC((yyval.codigo)), o);
-                                                                } }
-#line 1817 "microC.tab.c"
+                                }
+                              }
+#line 1754 "microC.tab.c"
     break;
 
   case 33: /* expression: expression "+" expression  */
-#line 298 "microC.y"
+#line 235 "microC.y"
                                        { (yyval.codigo) = expresion_bin("add", (yyvsp[-2].codigo), (yyvsp[0].codigo));
                                         
                                         
                                         }
-#line 1826 "microC.tab.c"
+#line 1763 "microC.tab.c"
     break;
 
   case 34: /* expression: expression "-" expression  */
-#line 302 "microC.y"
+#line 239 "microC.y"
                                  { (yyval.codigo) = expresion_bin("sub", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1832 "microC.tab.c"
+#line 1769 "microC.tab.c"
     break;
 
   case 35: /* expression: expression "*" expression  */
-#line 303 "microC.y"
+#line 240 "microC.y"
                                  { (yyval.codigo) = expresion_bin("mul", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1838 "microC.tab.c"
+#line 1775 "microC.tab.c"
     break;
 
   case 36: /* expression: expression "/" expression  */
-#line 304 "microC.y"
+#line 241 "microC.y"
                                  { comprobar_division((yyvsp[0].codigo));
                                    (yyval.codigo) = expresion_bin("div", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1845 "microC.tab.c"
+#line 1782 "microC.tab.c"
     break;
 
   case 37: /* expression: "number"  */
-#line 306 "microC.y"
+#line 243 "microC.y"
            { (yyval.codigo) = expresion_num((yyvsp[0].str)); }
-#line 1851 "microC.tab.c"
+#line 1788 "microC.tab.c"
     break;
 
   case 38: /* expression: "identifier"  */
-#line 307 "microC.y"
+#line 244 "microC.y"
            { verificar_id((yyvsp[0].str), 1);
              (yyval.codigo) = expresion_id((yyvsp[0].str)); }
-#line 1858 "microC.tab.c"
+#line 1795 "microC.tab.c"
     break;
 
   case 39: /* expression: "(" expression ")"  */
-#line 309 "microC.y"
+#line 246 "microC.y"
                            { (yyval.codigo) = (yyvsp[-1].codigo); }
-#line 1864 "microC.tab.c"
+#line 1801 "microC.tab.c"
     break;
 
   case 40: /* expression: "-" expression  */
-#line 310 "microC.y"
+#line 247 "microC.y"
                                     { (yyval.codigo) = expresion_bin("neg", (yyvsp[0].codigo), NULL); }
-#line 1870 "microC.tab.c"
+#line 1807 "microC.tab.c"
     break;
 
   case 41: /* expression: expression "<" expression  */
-#line 311 "microC.y"
+#line 248 "microC.y"
                                     { }
-#line 1876 "microC.tab.c"
+#line 1813 "microC.tab.c"
     break;
 
   case 42: /* expression: expression ">" expression  */
-#line 312 "microC.y"
+#line 249 "microC.y"
                                     { }
-#line 1882 "microC.tab.c"
+#line 1819 "microC.tab.c"
     break;
 
   case 43: /* expression: expression "<=" expression  */
-#line 313 "microC.y"
+#line 250 "microC.y"
                                     { }
-#line 1888 "microC.tab.c"
+#line 1825 "microC.tab.c"
     break;
 
   case 44: /* expression: expression ">=" expression  */
-#line 314 "microC.y"
+#line 251 "microC.y"
                                     { }
-#line 1894 "microC.tab.c"
+#line 1831 "microC.tab.c"
     break;
 
   case 45: /* expression: expression "==" expression  */
-#line 315 "microC.y"
+#line 252 "microC.y"
                                     { }
-#line 1900 "microC.tab.c"
+#line 1837 "microC.tab.c"
     break;
 
   case 46: /* expression: expression "!=" expression  */
-#line 316 "microC.y"
+#line 253 "microC.y"
                                     { }
-#line 1906 "microC.tab.c"
+#line 1843 "microC.tab.c"
     break;
 
   case 47: /* expression: "(" error ")"  */
-#line 317 "microC.y"
+#line 254 "microC.y"
                       { }
-#line 1912 "microC.tab.c"
+#line 1849 "microC.tab.c"
     break;
 
 
-#line 1916 "microC.tab.c"
+#line 1853 "microC.tab.c"
 
       default: break;
     }
@@ -2136,7 +2073,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 320 "microC.y"
+#line 257 "microC.y"
 
 
 // Accion que se ejecuta al detectar un error sintáctico y suma el contador de errores
@@ -2425,4 +2362,92 @@ void imprimirLC(ListaC codigo){
   }
     printf("    li $v0, 10\n");
     printf("    syscall\n");
+}
+
+// GENERACION DE CODIGO
+ListaC genCodigo_sw(ListaC expr, char *ide) {
+    Operacion o;
+    o.op = "sw";
+    o.res = recuperaResLC(expr);
+    asprintf(&(o.arg1), "_%s", ide);
+    o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    liberarReg(o.res);
+    return expr;
+}
+
+ListaC genCodigo_print(ListaC expr) {
+    Operacion o;
+    o.op = "li";
+    o.res = "$v0";
+    o.arg1 = "1";
+    o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    o.op = "move";
+    o.res = "$a0";
+    o.arg1 = recuperaResLC(expr);
+    o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    o.op = "syscall";
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    liberarReg(recuperaResLC(expr));
+    return expr;
+}
+
+ListaC genCodigo_printCAD(char* cad) {
+    ListaC codigo = creaLC();
+    Operacion o;
+    o.op = "li";
+    o.res = "$v0";
+    o.arg1 = "4";
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    o.op = "la";
+    o.res = "$a0";
+    PosicionLista p = buscaLS(l, cad);
+    Simbolo s = recuperaLS(l, p);
+    asprintf(&(o.arg1), "$str%d", s.valor);
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    o.op = "syscall";
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    return codigo;
+}
+
+ListaC genCodigo_read(ListaC lista_leida, char* ide){
+    if(lista_leida == NULL){
+        ListaC codigo = creaLC();
+        Operacion o;
+        o.op = "li";
+        o.res = "$v0";
+        o.arg1 = "5";
+        o.arg2 = NULL;
+        insertaLC(codigo, finalLC(codigo), o);
+        o.op = "syscall";
+        o.res = o.arg1 = o.arg2 = NULL;
+        insertaLC(codigo, finalLC(codigo), o);
+        o.op = "sw";
+        o.res = "$v0";
+        asprintf(&(o.arg1), "_%s", ide); 
+        o.arg2 = NULL;
+        insertaLC(codigo, finalLC(codigo), o);
+    }else{
+        Operacion o;
+        o.op = "li";
+        o.res = "$v0";
+        o.arg1 = "5";
+        o.arg2 = NULL;
+        insertaLC(lista_leida, finalLC(lista_leida), o);
+        o.op = "syscall";
+        o.res = o.arg1 = o.arg2 = NULL;
+        insertaLC(lista_leida, finalLC(lista_leida), o);
+        o.op = "sw";
+        o.res = "$v0";
+        asprintf(&(o.arg1), "_%s", ide); 
+        o.arg2 = NULL;
+        insertaLC(lista_leida, finalLC(lista_leida), o);    
+    }
+    return lista_leida;
 }

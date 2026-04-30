@@ -7,6 +7,7 @@
     #include <assert.h>
     #include "listaSimbolos.h"
     #include "listaCodigo.h"
+    
 
     extern int yylex();
     extern int yylineno;
@@ -40,6 +41,11 @@
     ListaC statement_if_else(ListaC expr, ListaC stat_if, ListaC stat_else);
     // MEJORA DEL DO_WHILE
     ListaC statement_do_while(ListaC stat, ListaC expr);
+    // GENERACION DE CODIGO
+    ListaC genCodigo_sw(ListaC expr, char *ide);
+    ListaC genCodigo_print(ListaC expr);
+    ListaC genCodigo_printCAD(char* cad);
+    ListaC genCodigo_read(ListaC lista_leida, char* ide);
     
 
 %}
@@ -157,30 +163,15 @@ id_decl : IDE {
             $$ = creaLC(); }
         | IDE "=" expression {
             declarar_id($1,t);
-            $$ = creaLC();
             if(errores == 0){
-                $$ = $3;
-                Operacion o;
-                o.op = "sw";
-                o.res = recuperaResLC($3);
-                asprintf(&(o.arg1), "_%s", $1);
-                o.arg2 = NULL;
-                insertaLC($$, finalLC($$), o);
-                liberarReg(o.res);
+                $$ = genCodigo_sw($3, $1);
             }
         }
         ;
 
 statement : IDE "=" expression ";" { verificar_id($1, 0);
                                      if (errores == 0){
-                                        $$ = $3;
-                                        Operacion o;
-                                        o.op = "sw";
-                                        o.res = recuperaResLC($3);
-                                        asprintf(&(o.arg1), "_%s", $1);
-                                        o.arg2 = NULL;
-                                        insertaLC($$, finalLC($$), o);
-                                        liberarReg(o.res);
+                                        $$ = genCodigo_sw($3, $1);
                                      }
                                      /*concatenaLC(codigoTotal,$3);*/   }
           | "{" statement_list "}" { if(errores == 0){
@@ -216,84 +207,30 @@ print_list : print_item { $$ = $1; }
            ;
 
 print_item : expression { if(errores == 0){
-                                $$ = $1;
-                                Operacion o;
-                                o.op = "li";
-                                o.res = "$v0";
-                                o.arg1 = "1";
-                                o.arg2 = NULL;
-                                insertaLC($$, finalLC($$), o);
-                                o.op = "move";
-                                o.res = "$a0";
-                                o.arg1 = recuperaResLC($1);
-                                o.arg2 = NULL;
-                                insertaLC($$, finalLC($$), o);
-                                o.op = "syscall";
-                                o.res = o.arg1 = o.arg2 = NULL;
-                                insertaLC($$, finalLC($$), o);
-                                liberarReg(recuperaResLC($1));
+                                $$ = genCodigo_print($1);
                             }
               }
            | CAD { declarar_cadena($1,CADENA); 
                     if(errores == 0){
-                        $$ = creaLC();
-                        Operacion o;
-                        o.op = "li";
-                        o.res = "$v0";
-                        o.arg1 = "4";
-                        o.arg2 = NULL;
-                        insertaLC($$, finalLC($$), o);
-                        o.op = "la";
-                        o.res = "$a0";
-                        PosicionLista p = buscaLS(l, $1);
-                        Simbolo s = recuperaLS(l, p);
-                        asprintf(&(o.arg1), "$str%d", s.valor);
-                        o.arg2 = NULL;
-                        insertaLC($$, finalLC($$), o);
-                        o.op = "syscall";
-                        o.res = o.arg1 = o.arg2 = NULL;
-                        insertaLC($$, finalLC($$), o);
+                        $$ = genCodigo_printCAD($1);
                     }
                  }
            ;
 
 read_list : IDE { verificar_id($1, 1);
                     if(errores == 0){
+                        $$ = genCodigo_read(NULL, $1);
+                    } else {
                         $$ = creaLC();
-                        Operacion o;
-                        o.op = "li";
-                        o.res = "$v0";
-                        o.arg1 = "5";
-                        o.arg2 = NULL;
-                        insertaLC($$, finalLC($$), o);
-                        o.op = "syscall";
-                        o.res = o.arg1 = o.arg2 = NULL;
-                        insertaLC($$, finalLC($$), o);
-                        o.op = "sw";
-                        o.res = "$v0";
-                        asprintf(&(o.arg1), "_%s", $1); 
-                        o.arg2 = NULL;
-                        insertaLC($$, finalLC($$), o);
                     }
                  }
           | read_list "," IDE { verificar_id($3, 1);
                                 if(errores == 0){
+                                    $$ = genCodigo_read($1, $3);
+                                } else {
                                     $$ = $1;
-                                    Operacion o;
-                                    o.op = "li";
-                                    o.res = "$v0";
-                                    o.arg1 = "5";
-                                    o.arg2 = NULL;
-                                    insertaLC($$, finalLC($$), o);
-                                    o.op = "syscall";
-                                    o.res = o.arg1 = o.arg2 = NULL;
-                                    insertaLC($$, finalLC($$), o);
-                                    o.op = "sw";
-                                    o.res = "$v0";
-                                    asprintf(&(o.arg1), "_%s", $3); 
-                                    o.arg2 = NULL;
-                                    insertaLC($$, finalLC($$), o);
-                                                                } }
+                                }
+                              }
 
 expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
                                         
@@ -605,4 +542,92 @@ void imprimirLC(ListaC codigo){
   }
     printf("    li $v0, 10\n");
     printf("    syscall\n");
+}
+
+// GENERACION DE CODIGO
+ListaC genCodigo_sw(ListaC expr, char *ide) {
+    Operacion o;
+    o.op = "sw";
+    o.res = recuperaResLC(expr);
+    asprintf(&(o.arg1), "_%s", ide);
+    o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    liberarReg(o.res);
+    return expr;
+}
+
+ListaC genCodigo_print(ListaC expr) {
+    Operacion o;
+    o.op = "li";
+    o.res = "$v0";
+    o.arg1 = "1";
+    o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    o.op = "move";
+    o.res = "$a0";
+    o.arg1 = recuperaResLC(expr);
+    o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    o.op = "syscall";
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(expr, finalLC(expr), o);
+    liberarReg(recuperaResLC(expr));
+    return expr;
+}
+
+ListaC genCodigo_printCAD(char* cad) {
+    ListaC codigo = creaLC();
+    Operacion o;
+    o.op = "li";
+    o.res = "$v0";
+    o.arg1 = "4";
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    o.op = "la";
+    o.res = "$a0";
+    PosicionLista p = buscaLS(l, cad);
+    Simbolo s = recuperaLS(l, p);
+    asprintf(&(o.arg1), "$str%d", s.valor);
+    o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    o.op = "syscall";
+    o.res = o.arg1 = o.arg2 = NULL;
+    insertaLC(codigo, finalLC(codigo), o);
+    return codigo;
+}
+
+ListaC genCodigo_read(ListaC lista_leida, char* ide){
+    if(lista_leida == NULL){
+        ListaC codigo = creaLC();
+        Operacion o;
+        o.op = "li";
+        o.res = "$v0";
+        o.arg1 = "5";
+        o.arg2 = NULL;
+        insertaLC(codigo, finalLC(codigo), o);
+        o.op = "syscall";
+        o.res = o.arg1 = o.arg2 = NULL;
+        insertaLC(codigo, finalLC(codigo), o);
+        o.op = "sw";
+        o.res = "$v0";
+        asprintf(&(o.arg1), "_%s", ide); 
+        o.arg2 = NULL;
+        insertaLC(codigo, finalLC(codigo), o);
+    }else{
+        Operacion o;
+        o.op = "li";
+        o.res = "$v0";
+        o.arg1 = "5";
+        o.arg2 = NULL;
+        insertaLC(lista_leida, finalLC(lista_leida), o);
+        o.op = "syscall";
+        o.res = o.arg1 = o.arg2 = NULL;
+        insertaLC(lista_leida, finalLC(lista_leida), o);
+        o.op = "sw";
+        o.res = "$v0";
+        asprintf(&(o.arg1), "_%s", ide); 
+        o.arg2 = NULL;
+        insertaLC(lista_leida, finalLC(lista_leida), o);    
+    }
+    return lista_leida;
 }
