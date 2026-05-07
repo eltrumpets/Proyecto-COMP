@@ -1,0 +1,33 @@
+void main() {
+    var int x = 10;
+    var int y = 5;
+    var int res = 0;
+    print("Inicio\n");
+    read(x);
+    read(y);
+    if (x == y)
+        print("x igual a y\n");
+    else if (x > y)
+        print("x mayor que y\n");
+    else
+        print("x menor que y\n");
+    while (x != y) {
+        print("x = ", x, "\n");
+        print("y = ", y, "\n");
+        if (x > y)
+            x = x - 1;
+        else
+            y = y - 1;
+    }
+    print("x e y son iguales\n");
+    res = x + y;
+    do {
+        print("res = ", res, "\n");
+        res = res - 3;
+    } while (res > 0);
+    if (res == 0)
+        print("res es cero\n");
+    else
+        print("res es negativo\n");
+    print("Fin\n");
+}

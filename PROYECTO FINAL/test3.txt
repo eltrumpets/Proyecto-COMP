@@ -1,0 +1,28 @@
+void main() {
+    var int x = 5;
+    var int suma = 0;
+    var int producto = 1;
+    const int limite = 0;
+    print("Inicio\n");
+    read(x);
+    do {
+        print("x = ", x, "\n");
+        suma = suma + x;
+        print("suma = ", suma, "\n");
+        producto = producto + x;
+        print("producto = ", producto, "\n");
+        x = x - 1;
+    } while (x);
+    print("suma final = ", suma, "\n");
+    print("producto final = ", producto, "\n");
+    var int y = 3;
+    do {
+        print("y = ", y, "\n");
+        y = y - 1;
+        if (y)
+            print("y no es cero\n");
+        else
+            print("y es cero\n");
+    } while (y);
+    print("Fin\n");
+}

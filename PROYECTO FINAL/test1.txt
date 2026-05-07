@@ -1,11 +1,21 @@
 void main() {
-    const int a = 0, b = 0;
-    print ("Inicio del programa", 42);
-    var int c = 5+2-2;
-    if (a) print ("a","\n");
+    const int a = 1, b = 0;
+    var int c = 10;
+    var int d = 0;
+    print("Inicio\n");
+    read(c);
+    if (c)
+        print("c no es cero\n");
+    else
+        print("c es cero\n");
     while (c) {
-        c = c + 1;
-        c = b-2+1;
+        print("while c = ", c, "\n");
+        c = c - 1;
     }
-    print ("Final","\n");
+    d = 5 + 3 - 2;
+    do {
+        print("do d = ", d, "\n");
+        d = d - 1;
+    } while (d);
+    print("Final\n");
 }
