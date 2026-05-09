@@ -1,0 +1,33 @@
+void main() {
+    const int MAX = 5;
+    var int a;
+    var int b;
+    var int mayor;
+    var int menor;
+    var int dif;
+    read(a, b);
+    if (a >= b) {
+        mayor = a;
+        menor = b;
+    } else {
+        mayor = b;
+        menor = a;
+    }
+    dif = mayor - menor;
+    if (dif == 0) {
+        print("Son iguales\n");
+    } else {
+        if (dif <= MAX) {
+            print("Diferencia pequeña: \n");
+            print(dif,"\n");
+        } else {
+            print("Diferencia grande: \n");
+            print(dif,"\n");
+        }
+    }
+    do {
+        mayor = mayor - 1;
+    } while (mayor > menor);
+    print("Mayor reducido: \n");
+    print(mayor,"\n");
+}

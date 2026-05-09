@@ -1,5 +1,6 @@
+#line 2 "build/lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "build/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -518,8 +519,8 @@ static int yy_more_len = 0;
 #define YY_MORE_ADJ (yy_more_len)
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "microC.l"
-#line 2 "microC.l"
+#line 1 "src/microC.l"
+#line 2 "src/microC.l"
     /* Código verbattim, es decir, codigo literal */
     #include <stdio.h>  
     #include <stdlib.h>
@@ -527,12 +528,12 @@ char *yytext;
     int inicio_comentario = 0;
     #define MAX_ENTERO 2147483648
     int contador_error = 0;
-#line 531 "lex.yy.c"
+#line 532 "build/lex.yy.c"
 /* Definiciones de macros de expresiones regulares */
 /* Opciones de flex */
 /* Condición de contexto para comentarios multilínea */
 
-#line 536 "lex.yy.c"
+#line 537 "build/lex.yy.c"
 
 #define INITIAL 0
 #define comentario 1
@@ -750,12 +751,12 @@ YY_DECL
 		}
 
 	{
-#line 23 "microC.l"
+#line 23 "src/microC.l"
 
 
-#line 26 "microC.l"
+#line 26 "src/microC.l"
  /* Expresiones regulares de espacios en blanco y comentarios */
-#line 759 "lex.yy.c"
+#line 760 "build/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -831,17 +832,17 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 27 "microC.l"
+#line 27 "src/microC.l"
 { }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "microC.l"
+#line 28 "src/microC.l"
 { }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 29 "microC.l"
+#line 29 "src/microC.l"
 { BEGIN(comentario); 
                       inicio_comentario = yylineno;
                       yymore(); //Para que no borre la variable yytext
@@ -850,16 +851,16 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 33 "microC.l"
+#line 33 "src/microC.l"
 { yymore();}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 34 "microC.l"
+#line 34 "src/microC.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case YY_STATE_EOF(comentario):
-#line 35 "microC.l"
+#line 35 "src/microC.l"
 { printf("Comentario desde %d sin cerrar al final\n", inicio_comentario); 
                       return 0;
                     }
@@ -867,58 +868,58 @@ case YY_STATE_EOF(comentario):
 /* Expresiones regulares de tokens */
 case 6:
 YY_RULE_SETUP
-#line 41 "microC.l"
+#line 41 "src/microC.l"
 { return PRI; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 42 "microC.l"
+#line 42 "src/microC.l"
 { return VOI; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 43 "microC.l"
+#line 43 "src/microC.l"
 { return VAR; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "microC.l"
+#line 44 "src/microC.l"
 { return CON; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 45 "microC.l"
+#line 45 "src/microC.l"
 { return INT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 46 "microC.l"
+#line 46 "src/microC.l"
 { return IFF; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 47 "microC.l"
+#line 47 "src/microC.l"
 { return ELS; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 48 "microC.l"
+#line 48 "src/microC.l"
 { return DO;  }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 49 "microC.l"
+#line 49 "src/microC.l"
 { return WHI; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 50 "microC.l"
+#line 50 "src/microC.l"
 { return REA; }
 	YY_BREAK
 /* Entre llaves para poner macros*/
 case 16:
 YY_RULE_SETUP
-#line 52 "microC.l"
+#line 52 "src/microC.l"
 { 
                   if(yyleng > 32){
                     contador_error++;
@@ -930,92 +931,92 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 60 "microC.l"
+#line 60 "src/microC.l"
 { return MNR; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 61 "microC.l"
+#line 61 "src/microC.l"
 { return MYR; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 62 "microC.l"
+#line 62 "src/microC.l"
 { return MNI; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 63 "microC.l"
+#line 63 "src/microC.l"
 { return MYI; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 64 "microC.l"
+#line 64 "src/microC.l"
 { return IG2; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 65 "microC.l"
+#line 65 "src/microC.l"
 { return DES; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 66 "microC.l"
+#line 66 "src/microC.l"
 { return IGU; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 67 "microC.l"
+#line 67 "src/microC.l"
 { return SUM; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 68 "microC.l"
+#line 68 "src/microC.l"
 { return RES; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 69 "microC.l"
+#line 69 "src/microC.l"
 { return MUL; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 70 "microC.l"
+#line 70 "src/microC.l"
 { return DIV; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 71 "microC.l"
+#line 71 "src/microC.l"
 { return COI; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 72 "microC.l"
+#line 72 "src/microC.l"
 { return COD; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 73 "microC.l"
+#line 73 "src/microC.l"
 { return COM; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 74 "microC.l"
+#line 74 "src/microC.l"
 { return PYC; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 75 "microC.l"
+#line 75 "src/microC.l"
 { return PAI; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 76 "microC.l"
+#line 76 "src/microC.l"
 { return PAD; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 78 "microC.l"
+#line 78 "src/microC.l"
 { 
                   long long entero = strtoll(yytext, NULL, 10);
                   if(entero > MAX_ENTERO){
@@ -1029,27 +1030,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 88 "microC.l"
+#line 88 "src/microC.l"
 { yylval.str = strdup(yytext);
     return CAD; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 90 "microC.l"
+#line 90 "src/microC.l"
 { printf("Cadena de caracteres no cerrada en línea %d: %s\n", yylineno, yytext); }
 	YY_BREAK
 /* Expresion regular de errores */
 case 37:
 YY_RULE_SETUP
-#line 93 "microC.l"
+#line 93 "src/microC.l"
 { printf("Error en linea %d: %s\n", yylineno, yytext);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 95 "microC.l"
+#line 95 "src/microC.l"
 ECHO;
 	YY_BREAK
-#line 1053 "lex.yy.c"
+#line 1054 "build/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2066,7 +2067,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 95 "microC.l"
+#line 95 "src/microC.l"
 
 
 

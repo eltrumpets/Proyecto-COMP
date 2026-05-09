@@ -67,12 +67,12 @@
 
 
 /* First part of user prologue.  */
-#line 1 "microC.y"
+#line 1 "src/microC.y"
 
 #define _GNU_SOURCE
 #include "microC_utils.h"
 
-#line 76 "microC.tab.c"
+#line 76 "build/microC.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -540,11 +540,11 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    76,    76,    78,    76,    96,    97,    98,   101,   101,
-     102,   102,   105,   108,   109,   114,   117,   125,   130,   133,
-     136,   139,   142,   143,   144,   150,   153,   156,   157,   162,
-     166,   173,   180,   188,   192,   193,   194,   196,   197,   199,
-     200,   201,   202,   203,   204,   205,   206,   207
+       0,    77,    77,    82,    77,    98,    99,   100,   103,   103,
+     104,   104,   107,   110,   111,   116,   119,   127,   134,   137,
+     140,   143,   146,   147,   148,   154,   157,   160,   161,   166,
+     170,   177,   184,   192,   196,   197,   198,   200,   201,   208,
+     209,   210,   211,   212,   213,   214,   215,   216
 };
 #endif
 
@@ -1460,230 +1460,232 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 76 "microC.y"
-          { l = creaLS();
-            codigoTotal = creaLC(); }
-#line 1467 "microC.tab.c"
+#line 77 "src/microC.y"
+        {
+            l = creaLS();
+            codigoTotal = creaLC();
+        }
+#line 1469 "build/microC.tab.c"
     break;
 
   case 3: /* $@2: %empty  */
-#line 78 "microC.y"
-                  { if(strcmp((yyvsp[0].str), "main") != 0){
-                printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, (yyvsp[0].str));
-                errores++;
-                    }
-                  }
-#line 1477 "microC.tab.c"
+#line 82 "src/microC.y"
+        {
+            comprobar_main((yyvsp[0].str));
+        }
+#line 1477 "build/microC.tab.c"
     break;
 
   case 4: /* program: $@1 "void" "identifier" $@2 "(" ")" "{" body "}"  */
-#line 84 "microC.y"
-          {
+#line 86 "src/microC.y"
+        {
             if (errores == 0){
-               imprimirLS(l);
-               imprimirLC(codigoTotal);
-               
-            }else{
-                printf("\nErrores semanticos: %d\n", errores);
+                imprimirLS(l);
+                imprimirLC(codigoTotal);
+            } else {
+                printf("Errores semanticos: %d\n", errores);
             }
-            liberaLS(l); 
-          }
-#line 1492 "microC.tab.c"
+
+            liberaLS(l);
+        }
+#line 1492 "build/microC.tab.c"
     break;
 
   case 5: /* body: body declaration  */
-#line 96 "microC.y"
+#line 98 "src/microC.y"
                         { concatenaLC(codigoTotal, (yyvsp[0].codigo)); }
-#line 1498 "microC.tab.c"
+#line 1498 "build/microC.tab.c"
     break;
 
   case 6: /* body: body statement  */
-#line 97 "microC.y"
+#line 99 "src/microC.y"
                         { concatenaLC(codigoTotal, (yyvsp[0].codigo)); }
-#line 1504 "microC.tab.c"
+#line 1504 "build/microC.tab.c"
     break;
 
   case 7: /* body: %empty  */
-#line 98 "microC.y"
+#line 100 "src/microC.y"
                         { (yyval.codigo) = creaLC(); }
-#line 1510 "microC.tab.c"
+#line 1510 "build/microC.tab.c"
     break;
 
   case 8: /* $@3: %empty  */
-#line 101 "microC.y"
+#line 103 "src/microC.y"
                   { t = VARIABLE; }
-#line 1516 "microC.tab.c"
+#line 1516 "build/microC.tab.c"
     break;
 
   case 9: /* declaration: "var" $@3 tipo id_list ";"  */
-#line 101 "microC.y"
+#line 103 "src/microC.y"
                                                     { (yyval.codigo) = (yyvsp[-1].codigo); }
-#line 1522 "microC.tab.c"
+#line 1522 "build/microC.tab.c"
     break;
 
   case 10: /* $@4: %empty  */
-#line 102 "microC.y"
+#line 104 "src/microC.y"
                   { t = CONSTANTE; }
-#line 1528 "microC.tab.c"
+#line 1528 "build/microC.tab.c"
     break;
 
   case 11: /* declaration: "const" $@4 tipo id_list ";"  */
-#line 102 "microC.y"
+#line 104 "src/microC.y"
                                                       { (yyval.codigo) = (yyvsp[-1].codigo); }
-#line 1534 "microC.tab.c"
+#line 1534 "build/microC.tab.c"
     break;
 
   case 12: /* tipo: "int"  */
-#line 105 "microC.y"
+#line 107 "src/microC.y"
               { (yyval.str) = "int"; }
-#line 1540 "microC.tab.c"
+#line 1540 "build/microC.tab.c"
     break;
 
   case 13: /* id_list: id_decl  */
-#line 108 "microC.y"
+#line 110 "src/microC.y"
                   { (yyval.codigo) = (yyvsp[0].codigo); }
-#line 1546 "microC.tab.c"
+#line 1546 "build/microC.tab.c"
     break;
 
   case 14: /* id_list: id_list "," id_decl  */
-#line 109 "microC.y"
+#line 111 "src/microC.y"
                               { (yyval.codigo) = (yyvsp[-2].codigo);
                             concatenaLC((yyval.codigo), (yyvsp[0].codigo));
                             liberaLC((yyvsp[0].codigo)); }
-#line 1554 "microC.tab.c"
+#line 1554 "build/microC.tab.c"
     break;
 
   case 15: /* id_decl: "identifier"  */
-#line 114 "microC.y"
+#line 116 "src/microC.y"
               {
             declarar_id((yyvsp[0].str), t);
             (yyval.codigo) = creaLC(); }
-#line 1562 "microC.tab.c"
+#line 1562 "build/microC.tab.c"
     break;
 
   case 16: /* id_decl: "identifier" "=" expression  */
-#line 117 "microC.y"
+#line 119 "src/microC.y"
                              {
             declarar_id((yyvsp[-2].str),t);
             if(errores == 0){
                 (yyval.codigo) = genCodigo_sw((yyvsp[0].codigo), (yyvsp[-2].str));
             }
         }
-#line 1573 "microC.tab.c"
+#line 1573 "build/microC.tab.c"
     break;
 
   case 17: /* statement: "identifier" "=" expression ";"  */
-#line 125 "microC.y"
+#line 127 "src/microC.y"
                                    { verificar_id((yyvsp[-3].str), 0);
                                      if (errores == 0){
                                         (yyval.codigo) = genCodigo_sw((yyvsp[-1].codigo), (yyvsp[-3].str));
+                                     }else{
+                                        (yyval.codigo) = creaLC();
                                      }
                                      /*concatenaLC(codigoTotal,$3);*/   }
-#line 1583 "microC.tab.c"
+#line 1585 "build/microC.tab.c"
     break;
 
   case 18: /* statement: "{" statement_list "}"  */
-#line 130 "microC.y"
+#line 134 "src/microC.y"
                                    { if(errores == 0){
                                         (yyval.codigo) = (yyvsp[-1].codigo); 
                                      } }
-#line 1591 "microC.tab.c"
+#line 1593 "build/microC.tab.c"
     break;
 
   case 19: /* statement: "if" "(" expression ")" statement "else" statement  */
-#line 133 "microC.y"
+#line 137 "src/microC.y"
                                                                { if(errores == 0){
                                                                     (yyval.codigo) = statement_if_else((yyvsp[-4].codigo),(yyvsp[-2].codigo),(yyvsp[0].codigo));               
                                                                 } }
-#line 1599 "microC.tab.c"
+#line 1601 "build/microC.tab.c"
     break;
 
   case 20: /* statement: "if" "(" expression ")" statement  */
-#line 136 "microC.y"
+#line 140 "src/microC.y"
                                                            { if(errores == 0){
                                                                 (yyval.codigo) = statement_if((yyvsp[-2].codigo),(yyvsp[0].codigo));
                                                               } }
-#line 1607 "microC.tab.c"
+#line 1609 "build/microC.tab.c"
     break;
 
   case 21: /* statement: "while" "(" expression ")" statement  */
-#line 139 "microC.y"
+#line 143 "src/microC.y"
                                                  { if(errores == 0){
                                                     (yyval.codigo) = statement_while((yyvsp[-2].codigo),(yyvsp[0].codigo));
                                                   } }
-#line 1615 "microC.tab.c"
+#line 1617 "build/microC.tab.c"
     break;
 
   case 22: /* statement: "print" "(" print_list ")" ";"  */
-#line 142 "microC.y"
+#line 146 "src/microC.y"
                                            { (yyval.codigo) = (yyvsp[-2].codigo); }
-#line 1621 "microC.tab.c"
+#line 1623 "build/microC.tab.c"
     break;
 
   case 23: /* statement: "read" "(" read_list ")" ";"  */
-#line 143 "microC.y"
+#line 147 "src/microC.y"
                                          { (yyval.codigo) = (yyvsp[-2].codigo); }
-#line 1627 "microC.tab.c"
+#line 1629 "build/microC.tab.c"
     break;
 
   case 24: /* statement: "do" statement "while" "(" expression ")" ";"  */
-#line 144 "microC.y"
+#line 148 "src/microC.y"
                                                           { if(errores == 0){
                                                                 // MEJORA DEL DO_WHILE
                                                                 (yyval.codigo) = statement_do_while((yyvsp[-5].codigo), (yyvsp[-2].codigo));
                                                     } }
-#line 1636 "microC.tab.c"
+#line 1638 "build/microC.tab.c"
     break;
 
   case 25: /* statement_list: statement_list statement  */
-#line 150 "microC.y"
+#line 154 "src/microC.y"
                                           { (yyval.codigo) = (yyvsp[-1].codigo);
                                             concatenaLC((yyval.codigo), (yyvsp[0].codigo));
                                             liberaLC((yyvsp[0].codigo)); }
-#line 1644 "microC.tab.c"
+#line 1646 "build/microC.tab.c"
     break;
 
   case 26: /* statement_list: %empty  */
-#line 153 "microC.y"
+#line 157 "src/microC.y"
                         { (yyval.codigo) = creaLC(); }
-#line 1650 "microC.tab.c"
+#line 1652 "build/microC.tab.c"
     break;
 
   case 27: /* print_list: print_item  */
-#line 156 "microC.y"
+#line 160 "src/microC.y"
                         { (yyval.codigo) = (yyvsp[0].codigo); }
-#line 1656 "microC.tab.c"
+#line 1658 "build/microC.tab.c"
     break;
 
   case 28: /* print_list: print_list "," print_item  */
-#line 157 "microC.y"
+#line 161 "src/microC.y"
                                        { (yyval.codigo) = (yyvsp[-2].codigo);
                concatenaLC((yyval.codigo), (yyvsp[0].codigo));
                liberaLC((yyvsp[0].codigo)); }
-#line 1664 "microC.tab.c"
+#line 1666 "build/microC.tab.c"
     break;
 
   case 29: /* print_item: expression  */
-#line 162 "microC.y"
+#line 166 "src/microC.y"
                         { if(errores == 0){
                                 (yyval.codigo) = genCodigo_print((yyvsp[0].codigo));
                             }
               }
-#line 1673 "microC.tab.c"
+#line 1675 "build/microC.tab.c"
     break;
 
   case 30: /* print_item: "cadena"  */
-#line 166 "microC.y"
+#line 170 "src/microC.y"
                  { declarar_cadena((yyvsp[0].str),CADENA); 
                     if(errores == 0){
                         (yyval.codigo) = genCodigo_printCAD((yyvsp[0].str));
                     }
                  }
-#line 1683 "microC.tab.c"
+#line 1685 "build/microC.tab.c"
     break;
 
   case 31: /* read_list: "identifier"  */
-#line 173 "microC.y"
+#line 177 "src/microC.y"
                 { verificar_id((yyvsp[0].str), 1);
                     if(errores == 0){
                         (yyval.codigo) = genCodigo_read(NULL, (yyvsp[0].str));
@@ -1691,11 +1693,11 @@ yyreduce:
                         (yyval.codigo) = creaLC();
                     }
                  }
-#line 1695 "microC.tab.c"
+#line 1697 "build/microC.tab.c"
     break;
 
   case 32: /* read_list: read_list "," "identifier"  */
-#line 180 "microC.y"
+#line 184 "src/microC.y"
                               { verificar_id((yyvsp[0].str), 1);
                                 if(errores == 0){
                                     (yyval.codigo) = genCodigo_read((yyvsp[-2].codigo), (yyvsp[0].str));
@@ -1703,106 +1705,111 @@ yyreduce:
                                     (yyval.codigo) = (yyvsp[-2].codigo);
                                 }
                               }
-#line 1707 "microC.tab.c"
+#line 1709 "build/microC.tab.c"
     break;
 
   case 33: /* expression: expression "+" expression  */
-#line 188 "microC.y"
+#line 192 "src/microC.y"
                                        { (yyval.codigo) = expresion_bin("add", (yyvsp[-2].codigo), (yyvsp[0].codigo));
                                         
                                         
                                         }
-#line 1716 "microC.tab.c"
+#line 1718 "build/microC.tab.c"
     break;
 
   case 34: /* expression: expression "-" expression  */
-#line 192 "microC.y"
+#line 196 "src/microC.y"
                                  { (yyval.codigo) = expresion_bin("sub", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1722 "microC.tab.c"
+#line 1724 "build/microC.tab.c"
     break;
 
   case 35: /* expression: expression "*" expression  */
-#line 193 "microC.y"
+#line 197 "src/microC.y"
                                  { (yyval.codigo) = expresion_bin("mul", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1728 "microC.tab.c"
+#line 1730 "build/microC.tab.c"
     break;
 
   case 36: /* expression: expression "/" expression  */
-#line 194 "microC.y"
+#line 198 "src/microC.y"
                                  { comprobar_division((yyvsp[0].codigo));
                                    (yyval.codigo) = expresion_bin("div", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1735 "microC.tab.c"
+#line 1737 "build/microC.tab.c"
     break;
 
   case 37: /* expression: "number"  */
-#line 196 "microC.y"
+#line 200 "src/microC.y"
            { (yyval.codigo) = expresion_num((yyvsp[0].str)); }
-#line 1741 "microC.tab.c"
+#line 1743 "build/microC.tab.c"
     break;
 
   case 38: /* expression: "identifier"  */
-#line 197 "microC.y"
+#line 201 "src/microC.y"
            { verificar_id((yyvsp[0].str), 1);
-             (yyval.codigo) = expresion_id((yyvsp[0].str)); }
-#line 1748 "microC.tab.c"
+            if(errores == 0){
+             (yyval.codigo) = expresion_id((yyvsp[0].str)); 
+             } else {
+                (yyval.codigo) = creaLC();
+             }
+            }
+#line 1755 "build/microC.tab.c"
     break;
 
   case 39: /* expression: "(" expression ")"  */
-#line 199 "microC.y"
+#line 208 "src/microC.y"
                            { (yyval.codigo) = (yyvsp[-1].codigo); }
-#line 1754 "microC.tab.c"
+#line 1761 "build/microC.tab.c"
     break;
 
   case 40: /* expression: "-" expression  */
-#line 200 "microC.y"
+#line 209 "src/microC.y"
                                     { (yyval.codigo) = expresion_bin("neg", (yyvsp[0].codigo), NULL); }
-#line 1760 "microC.tab.c"
+#line 1767 "build/microC.tab.c"
     break;
 
   case 41: /* expression: expression "<" expression  */
-#line 201 "microC.y"
+#line 210 "src/microC.y"
                                     { (yyval.codigo) = expresion_rel("slt", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1766 "microC.tab.c"
+#line 1773 "build/microC.tab.c"
     break;
 
   case 42: /* expression: expression ">" expression  */
-#line 202 "microC.y"
+#line 211 "src/microC.y"
                                     { (yyval.codigo) = expresion_rel("sgt", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1772 "microC.tab.c"
+#line 1779 "build/microC.tab.c"
     break;
 
   case 43: /* expression: expression "<=" expression  */
-#line 203 "microC.y"
+#line 212 "src/microC.y"
                                     { (yyval.codigo) = expresion_rel("sle", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1778 "microC.tab.c"
+#line 1785 "build/microC.tab.c"
     break;
 
   case 44: /* expression: expression ">=" expression  */
-#line 204 "microC.y"
+#line 213 "src/microC.y"
                                     { (yyval.codigo) = expresion_rel("sge", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1784 "microC.tab.c"
+#line 1791 "build/microC.tab.c"
     break;
 
   case 45: /* expression: expression "==" expression  */
-#line 205 "microC.y"
+#line 214 "src/microC.y"
                                     { (yyval.codigo) = expresion_rel("seq", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1790 "microC.tab.c"
+#line 1797 "build/microC.tab.c"
     break;
 
   case 46: /* expression: expression "!=" expression  */
-#line 206 "microC.y"
+#line 215 "src/microC.y"
                                     { (yyval.codigo) = expresion_rel("sne", (yyvsp[-2].codigo), (yyvsp[0].codigo)); }
-#line 1796 "microC.tab.c"
+#line 1803 "build/microC.tab.c"
     break;
 
   case 47: /* expression: "(" error ")"  */
-#line 207 "microC.y"
+#line 216 "src/microC.y"
                       { }
-#line 1802 "microC.tab.c"
+#line 1809 "build/microC.tab.c"
     break;
 
 
-#line 1806 "microC.tab.c"
+#line 1813 "build/microC.tab.c"
 
       default: break;
     }
@@ -2026,4 +2033,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 210 "microC.y"
+#line 219 "src/microC.y"

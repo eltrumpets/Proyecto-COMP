@@ -1,26 +1,50 @@
-microC : lex.yy.c microC.tab.c main.c listaSimbolos.c listaCodigo.c microC_utils.c
-	gcc lex.yy.c microC.tab.c main.c listaSimbolos.c listaCodigo.c microC_utils.c -lfl -o microC
+SRC_DIR=src
+INCLUDE_DIR=include
+BUILD_DIR=build
+TEST_DIR=tests
 
-lex.yy.c : microC.l microC.tab.h
-	flex microC.l
+SRC=$(SRC_DIR)/main.c $(SRC_DIR)/listaSimbolos.c $(SRC_DIR)/listaCodigo.c $(SRC_DIR)/microC_utils.c
+BISON_SRC=$(SRC_DIR)/microC.y
+FLEX_SRC=$(SRC_DIR)/microC.l
+BISON_OUT=$(BUILD_DIR)/microC.tab.c $(BUILD_DIR)/microC.tab.h
+LEX_OUT=$(BUILD_DIR)/lex.yy.c
 
-microC.tab.h microC.tab.c : microC.y
-	bison -d -v microC.y
-	
-clean : 
-	rm -f lex.yy.c microC microC.tab.*
+.PHONY: all clean run1 run2 run3 run4 run5 run6
 
-run1 : microC test1.txt
-	./microC test1.txt
+all: microC
 
-run2 : microC test2.txt
-	./microC test2.txt
+microC: $(LEX_OUT) $(BUILD_DIR)/microC.tab.c $(SRC)
+	gcc -I$(INCLUDE_DIR) -I$(BUILD_DIR) $(LEX_OUT) $(BUILD_DIR)/microC.tab.c $(SRC) -lfl -o microC
 
-run3 : microC test3.txt
-	./microC test3.txt
+$(LEX_OUT): $(FLEX_SRC) $(BUILD_DIR)/microC.tab.h
+	flex -o $@ $<
 
-run4 : microC test4.txt
-	./microC test4.txt
+$(BUILD_DIR)/microC.tab.h $(BUILD_DIR)/microC.tab.c: $(BISON_SRC)
+	bison -d -v -o $(BUILD_DIR)/microC.tab.c $(BISON_SRC)
 
-run5 : microC test5.txt
-	./microC test5.txt
+clean:
+	rm -f $(LEX_OUT) microC $(BUILD_DIR)/microC.tab.* $(BUILD_DIR)/microC.output
+
+run1: microC
+	./microC $(TEST_DIR)/test1.txt
+
+run2: microC
+	./microC $(TEST_DIR)/test2.txt
+
+run3: microC
+	./microC $(TEST_DIR)/test3.txt
+
+run4: microC
+	./microC $(TEST_DIR)/test4.txt
+
+run5: microC
+	./microC $(TEST_DIR)/test5.txt
+
+run6: microC
+	./microC $(TEST_DIR)/test6.txt
+
+run-while: microC
+	./microC $(TEST_DIR)/test-while.txt
+
+run-do-while: microC
+	./microC $(TEST_DIR)/test-do-while.txt

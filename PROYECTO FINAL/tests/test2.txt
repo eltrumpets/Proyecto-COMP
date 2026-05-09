@@ -1,0 +1,22 @@
+void main() {
+    const int LIMITE = 10;
+    var int i;
+    var int suma;
+    var int num;
+    i = 1;
+    suma = 0;
+    read(num);
+    while (i <= LIMITE) {
+        if (num >= i) {
+            suma = suma + i;
+            i = i + 1;
+        } else {
+            i = LIMITE + 1;
+        }
+    }
+    do {
+        print("Resultado: \n");
+        print(suma,"\n");
+        num = num - 1;
+    } while (num > 0);
+}

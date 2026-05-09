@@ -91,6 +91,13 @@ void verificar_id(char *id, int esLectura){
     }
 }
 
+void comprobar_main(char *id){
+    if(strcmp(id, "main") != 0){
+        printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, id);
+        errores++;
+    }
+}
+
 void inicializarRegs(){
     for(int i = 0; i < 10; i++){
         registros[i] = false;

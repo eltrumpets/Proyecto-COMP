@@ -1,0 +1,35 @@
+void main() {
+    const int LIMITE = 5;
+    var int i;
+    var int par;
+    var int impar;
+    par = 0;
+    impar = 0;
+    i = 1;
+    while (i <= LIMITE) {
+        if (i == 1) {
+            impar = impar + i;
+        } else {
+            if (i == 2) {
+                par = par + i;
+            } else {
+                if (i == 3) {
+                    impar = impar + i;
+                } else {
+                    if (i == 4) {
+                        par = par + i;
+                    } else {
+                        impar = impar + i;
+                    }
+                }
+            }
+        }
+        i = i + 1;
+    }
+    print("Suma pares: \n");
+    print(par);
+    print("\n");
+    print("Suma impares: \n");
+    print(impar);
+    print("\n");
+}

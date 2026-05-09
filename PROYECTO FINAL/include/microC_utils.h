@@ -28,6 +28,7 @@ void declarar_id(char *id, Tipo t);
 void imprimirLS(Lista l);
 void declarar_cadena(char *cadena, Tipo t);
 void verificar_id(char *id, int esLectura);
+void comprobar_main(char *id);
 void inicializarRegs();
 char *obtenerReg();
 void liberarReg(char *reg);

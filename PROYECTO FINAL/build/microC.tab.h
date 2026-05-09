@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_MICROC_TAB_H_INCLUDED
-# define YY_YY_MICROC_TAB_H_INCLUDED
+#ifndef YY_YY_BUILD_MICROC_TAB_H_INCLUDED
+# define YY_YY_BUILD_MICROC_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,11 +45,11 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 6 "microC.y"
+#line 6 "src/microC.y"
 
     #include "listaCodigo.h"
 
-#line 53 "microC.tab.h"
+#line 53 "build/microC.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -100,12 +100,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 10 "microC.y"
+#line 10 "src/microC.y"
 
   ListaC codigo;
   char *str;
 
-#line 109 "microC.tab.h"
+#line 109 "build/microC.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -120,4 +120,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_MICROC_TAB_H_INCLUDED  */
+#endif /* !YY_YY_BUILD_MICROC_TAB_H_INCLUDED  */

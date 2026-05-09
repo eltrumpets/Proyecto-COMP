@@ -73,25 +73,27 @@
 
 %%
 
-program : { l = creaLS();
-            codigoTotal = creaLC(); }
-          VOI IDE { if(strcmp($3, "main") != 0){
-                printf("Error en línea %d: %s es un id de programa incorrecto\n", yylineno, $3);
-                errores++;
-                    }
-                  }
-          "(" ")" "{"body"}" 
-          {
+program :
+        {
+            l = creaLS();
+            codigoTotal = creaLC();
+        }
+        VOI IDE
+        {
+            comprobar_main($3);
+        }
+        "(" ")" "{" body "}"
+        {
             if (errores == 0){
-               imprimirLS(l);
-               imprimirLC(codigoTotal);
-               
-            }else{
-                printf("\nErrores semanticos: %d\n", errores);
+                imprimirLS(l);
+                imprimirLC(codigoTotal);
+            } else {
+                printf("Errores semanticos: %d\n", errores);
             }
-            liberaLS(l); 
-          }
-        ;
+
+            liberaLS(l);
+        }
+;
 
 body : body declaration { concatenaLC(codigoTotal, $2); }
      | body statement   { concatenaLC(codigoTotal, $2); }
@@ -125,6 +127,8 @@ id_decl : IDE {
 statement : IDE "=" expression ";" { verificar_id($1, 0);
                                      if (errores == 0){
                                         $$ = genCodigo_sw($3, $1);
+                                     }else{
+                                        $$ = creaLC();
                                      }
                                      /*concatenaLC(codigoTotal,$3);*/   }
           | "{" statement_list "}" { if(errores == 0){
@@ -185,25 +189,53 @@ read_list : IDE { verificar_id($1, 1);
                                 }
                               }
 
-expression : expression "+" expression { $$ = expresion_bin("add", $1, $3);
+expression : expression "+" expression { if(errores == 0){
+                                        $$ = expresion_bin("add", $1, $3);
                                         
-                                        
+                                          } 
                                         }
-     | expression "-" expression { $$ = expresion_bin("sub", $1, $3); }
-     | expression "*" expression { $$ = expresion_bin("mul", $1, $3); } 
+     | expression "-" expression { if(errores == 0){
+                                    $$ = expresion_bin("sub", $1, $3);
+                                  } }
+     | expression "*" expression { if(errores == 0){
+                                    $$ = expresion_bin("mul", $1, $3);
+                                  } }
      | expression "/" expression { comprobar_division($3);
-                                   $$ = expresion_bin("div", $1, $3); }
-     | NUM { $$ = expresion_num($1); }
+                                if(errores == 0){
+                                   $$ = expresion_bin("div", $1, $3);
+                                 } }
+     | NUM { if(errores == 0){
+                $$ = expresion_num($1);
+             } }
      | IDE { verificar_id($1, 1);
-             $$ = expresion_id($1); }              
+            if(errores == 0){
+             $$ = expresion_id($1); 
+             } else {
+                $$ = creaLC();
+             }
+            }            
      | "(" expression ")"  { $$ = $2; }
-     | "-" expression %prec SIGNO   { $$ = expresion_bin("neg", $2, NULL); }
-     | expression "<" expression    { $$ = expresion_rel("slt", $1, $3); }
-     | expression ">" expression    { $$ = expresion_rel("sgt", $1, $3); }
-     | expression "<=" expression   { $$ = expresion_rel("sle", $1, $3); }
-     | expression ">=" expression   { $$ = expresion_rel("sge", $1, $3); }
-     | expression "==" expression   { $$ = expresion_rel("seq", $1, $3); }
-     | expression "!=" expression   { $$ = expresion_rel("sne", $1, $3); }
+     | "-" expression %prec SIGNO   { if(errores == 0){
+                                        $$ = expresion_bin("neg", $2, NULL);
+                                      } }
+     | expression "<" expression    { if(errores == 0){
+                                        $$ = expresion_rel("slt", $1, $3);
+                                      } }
+     | expression ">" expression    { if(errores == 0){
+                                        $$ = expresion_rel("sgt", $1, $3);
+                                      } }
+     | expression "<=" expression   { if(errores == 0){
+                                        $$ = expresion_rel("sle", $1, $3);
+                                      } }
+     | expression ">=" expression   { if(errores == 0){
+                                        $$ = expresion_rel("sge", $1, $3);
+                                      } }
+     | expression "==" expression   { if(errores == 0){
+                                        $$ = expresion_rel("seq", $1, $3);
+                                      } }
+     | expression "!=" expression   { if(errores == 0){
+                                        $$ = expresion_rel("sne", $1, $3);
+                                      } }
      | "(" error ")"  { }
      ;
 

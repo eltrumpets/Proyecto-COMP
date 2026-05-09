@@ -1,0 +1,7 @@
+void main() {
+    var int x;
+    x = 5;
+    do {
+        print(x);
+    } while (x < 5);
+}
